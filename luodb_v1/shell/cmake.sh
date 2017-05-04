@@ -11,23 +11,19 @@ echo "build_dir:    $build_dir"
 bin_dir=$root_dir/bin
 echo "bin_dir:      $bin_dir"
 
-echo "cleanup..."
-
-if [[ -d $build_dir ]]; then
-    echo "rf -rf $build_dir"
-    rm -rf $build_dir
-fi
+echo "cleanup start..."
 
 if [[ -d $bin_dir ]]; then
-    echo "rf -rf $bin_dir"
-    rm -rf $bin_dir
+    find $bin_dir/* | xargs rm
+else
+    mkdir $bin_dir
 fi
 
-echo "mkdir $build_dir"
-mkdir $build_dir
-
-echo "mkdir $bin_dir"
-mkdir $bin_dir
+if [[ -d $build_dir ]]; then
+    find $build_dir/* | xargs rm -rf
+else
+    mkdir $build_dir
+fi
 
 echo "cd $build_dir"
 cd $build_dir
