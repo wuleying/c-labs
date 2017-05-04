@@ -4,7 +4,10 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # 源文件列表
 SET(SOURCE_SRC
-        luodb.c
+        memory/mem.c
+        structure/dict.c
+        structure/str.c
+        core/luodb.c
         )
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_SRC})

@@ -4,8 +4,12 @@
 
 #include <stdio.h>
 
+#include <luodb/structure/str.h>
+
 int main(int argc, char *argv[]) {
-    printf("%s", "hello");
+    luo_str_t val = luo_str_create("hello", 5);
+
+    printf("%s", val);
 
     return 0;
 }
