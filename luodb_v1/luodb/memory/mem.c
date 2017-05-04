@@ -6,6 +6,7 @@
 
 static size_t used_memory = 0;
 
+// 分配一块指定大小的内存区域，并返回指向该区域头部的指针，分配失败则返回NULL
 void *
 luo_malloc(size_t size) {
     void *ptr = malloc(size + sizeof(size_t));
@@ -20,6 +21,7 @@ luo_malloc(size_t size) {
     return (char *) ptr + sizeof(size_t);
 }
 
+// 对luo_malloc申请的内存进行动态大小调整
 void *
 luo_realloc(void *ptr, size_t size) {
     void   *real_ptr;
@@ -45,6 +47,7 @@ luo_realloc(void *ptr, size_t size) {
     return (char *) new_ptr + sizeof(size_t);
 }
 
+// 释放ptr指向的存储空间
 void
 luo_free(void *ptr) {
     void   *real_ptr;
@@ -61,16 +64,18 @@ luo_free(void *ptr) {
     free(real_ptr);
 }
 
+// 拷贝字符串内存
 char *
-luo_strdup(const char *s) {
-    size_t l  = strlen(s) + 1;
-    char   *p = luo_malloc(l);
+luo_strdup(const char *str) {
+    size_t len  = strlen(str) + 1;
+    char   *ptr = luo_malloc(len);
 
-    memcpy(p, s, l);
+    memcpy(ptr, str, len);
 
-    return p;
+    return ptr;
 }
 
+// 返回已使用内存大小
 size_t
 luo_malloc_used_memory(void) {
     return used_memory;
