@@ -12,12 +12,12 @@
 
 typedef char *luo_str_t;
 
-struct luo_str {
+struct luo_str_s {
     long len;
     long free;
     char buf[];
 };
 
-luo_str_t luo_str_create(const void *init, size_t len);
+luo_str_t luoStrCreate(const void *init, size_t len);
 
 #endif //LUODB_STRING_H

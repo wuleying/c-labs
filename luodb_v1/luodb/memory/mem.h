@@ -8,14 +8,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-void *luo_malloc(size_t size);
+void *luoMalloc(size_t size);
 
-void *luo_realloc(void *ptr, size_t size);
+void *luoRealloc(void *ptr, size_t size);
 
-void luo_free(void *ptr);
+void luoFree(void *ptr);
 
-char *luo_strdup(const char *s);
+char *luoStrdup(const char *s);
 
-size_t luo_malloc_used_memory(void);
+size_t luoMallocUsedMemory(void);
 
 #endif //LUODB_MEM_H

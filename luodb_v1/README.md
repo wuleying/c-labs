@@ -9,4 +9,4 @@ cmake:
 
 run:
 
-    bin/luodb
+    bin/luodb [/path/to/luodb.conf]

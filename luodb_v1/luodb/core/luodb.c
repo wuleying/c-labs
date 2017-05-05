@@ -4,12 +4,25 @@
 
 #include <stdio.h>
 
-#include <luodb/structure/str.h>
+#include <luodb/header/config.h>
+#include <luodb/header/event.h>
+#include <luodb/header/memory.h>
+#include <luodb/header/net.h>
+#include <luodb/header/structure.h>
+#include <luodb/header/util.h>
 
 int main(int argc, char *argv[]) {
-    luo_str_t val = luo_str_create("hello", 5);
+    // 初始化服务端配置
+    initServerConfig();
 
-    printf("%s", val);
+    if (argc == 2) {
+        printf("%s", argv[1]);
+    } else if (argc > 2) {
+        fprintf(stderr, "Usage: bin/luodb [/path/to/luodb.conf]\n");
+        exit(1);
+    } else {
+        luoLog(LUO_LOG_WARNING, "Warning: no config file specified, using the default config.");
+    }
 
     return 0;
 }

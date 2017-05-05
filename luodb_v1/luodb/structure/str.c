@@ -4,10 +4,10 @@
 
 #include <luodb/structure/str.h>
 
-luo_str_t luo_str_create(const void *init, size_t len) {
-    struct luo_str *str;
+luo_str_t luoStrCreate(const void *init, size_t len) {
+    struct luo_str_s *str;
 
-    str = luo_malloc(sizeof(struct luo_str) + len + 1);
+    str = luoMalloc(sizeof(struct luo_str_s) + len + 1);
 
     if (str == NULL) {
         return NULL;
