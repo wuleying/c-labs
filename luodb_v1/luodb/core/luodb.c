@@ -2,8 +2,6 @@
 // Created by luoliang1 on 2017/5/4.
 //
 
-#include <stdio.h>
-
 #include <luodb/header/config.h>
 #include <luodb/header/event.h>
 #include <luodb/header/memory.h>
