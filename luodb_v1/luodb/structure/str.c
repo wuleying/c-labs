@@ -216,3 +216,134 @@ luoStrTrim(luo_str ls, const char *c) {
 
     return ls;
 }
+
+luo_str
+luoStrRange(luo_str ls, long start, long end) {
+    struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);
+
+    long new_len;
+
+    long len = luoStrLen(ls);
+
+    if (len == 0) {
+        return ls;
+    }
+
+    if (start < 0) {
+        start += len;
+        if (start < 0) {
+            start = 0;
+        }
+    }
+
+    if (end < 0) {
+        end += len;
+        if (end < 0) {
+            end = 0;
+        }
+    }
+
+    new_len = (start > end) ? 0 : ((end - start) + 1);
+
+    if (new_len != 0) {
+        if (start >= (signed) len) {
+            start = len - 1;
+        }
+
+        if (end >= (signed) len) {
+            end = len - 1;
+        }
+
+        new_len = (start > end) ? 0 : ((end - start) + 1);
+    } else {
+        start = 0;
+    }
+
+    if (start != 0) {
+        memmove(lss->buf, lss->buf + start, new_len);
+    }
+
+    lss->buf[new_len] = 0;
+    lss->free = lss->free + (lss->len - new_len);
+    lss->len  = new_len;
+    return ls;
+}
+
+void
+luoStrToLower(luo_str ls) {
+    long len = luoStrLen(ls);
+
+    for (int i = 0; i < len; ++i) {
+        ls[i] = (char) tolower(ls[i]);
+    }
+}
+
+void
+luoStrToUpper(luo_str ls) {
+    long len = luoStrLen(ls);
+
+    for (int i = 0; i < len; ++i) {
+        ls[i] = (char) toupper(ls[i]);
+    }
+}
+
+int
+luoStrCmp(luo_str ls1, luo_str ls2) {
+    long len1, len2, min_len;
+    int  cmp;
+
+    len1 = luoStrLen(ls1);
+    len2 = luoStrLen(ls2);
+
+    min_len = (len1 < len2) ? len1 : len2;
+
+    cmp = memcmp(ls1, ls2, (size_t) min_len);
+
+    if (cmp == 0) {
+        return (int) (len1 - len2);
+    }
+
+    return cmp;
+}
+
+luo_str *
+luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
+    int elements = 0;
+    int slots    = 5;
+    int start    = 0;
+
+    luo_str *tokens = luoMalloc(sizeof(luo_str) * slots);
+
+    if (sep_len < 1 || len < 0 || tokens == NULL) {
+        return NULL;
+    }
+
+    for (int i = 0; i < (len - (sep_len - 1)); ++i) {
+        if (slots < elements + 2) {
+            luo_str *new_tokens;
+
+            slots *= 2;
+
+            new_tokens = luoRealloc(tokens, sizeof(luo_str) * slots);
+
+            if (new_tokens == NULL) {
+                goto cleanup;
+            }
+
+            tokens = new_tokens;
+        }
+
+        //todo
+    }
+
+    cleanup:
+    {
+        for (int i = 0; i < elements; ++i) {
+            luoFree(tokens[i]);
+        }
+
+        luoFree(tokens);
+        return NULL;
+    };
+}
+

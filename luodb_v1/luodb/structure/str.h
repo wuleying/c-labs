@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include <luodb/header/memory.h>
 
@@ -55,5 +56,13 @@ luo_str luoStrCopy(luo_str ls, char *t);
 luo_str luoStrCatPrintf(luo_str ls, const char *fmt, ...);
 
 luo_str luoStrTrim(luo_str ls, const char *c);
+
+void luoStrToLower(luo_str ls);
+
+void luoStrToUpper(luo_str ls);
+
+int luoStrCmp(luo_str ls1, luo_str ls2);
+
+luo_str *luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count);
 
 #endif //LUODB_STRING_H
