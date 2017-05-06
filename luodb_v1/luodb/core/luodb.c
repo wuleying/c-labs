@@ -8,19 +8,15 @@
 // Created by luoliang1 on 2017/5/4.
 //
 
-#include <luodb/header/config.h>
-#include <luodb/header/event.h>
-#include <luodb/header/memory.h>
-#include <luodb/header/net.h>
-#include <luodb/header/structure.h>
-#include <luodb/header/util.h>
+#include <luodb/core/luodb.h>
 
 int main(int argc, char *argv[]) {
     // 初始化服务端配置
     initServerConfig();
 
     if (argc == 2) {
-        printf("%s", argv[1]);
+        loadServerConfig(argv[1]);
+
     } else if (argc > 2) {
         fprintf(stderr, "Usage: bin/luodb [/path/to/luodb.conf]\n");
         exit(1);
