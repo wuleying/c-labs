@@ -33,7 +33,7 @@ luo_str luoStrCreate(const void *init, long len);
 
 luo_str luoStrNew(const char *init);
 
-luo_str luoEmpty();
+luo_str luoStrEmpty();
 
 long luoStrLen(const luo_str ls);
 

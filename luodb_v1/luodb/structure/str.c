@@ -44,7 +44,7 @@ luoStrNew(const char *init) {
 }
 
 luo_str
-luoEmpty() {
+luoStrEmpty() {
     return luoStrCreate("", 0);
 }
 

@@ -13,14 +13,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
 
 // TCP端口
 #define LUO_SERVER_TCP_PORT     10088
-// 文件描述符
-#define LUO_SERVER_FD           0
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024
 

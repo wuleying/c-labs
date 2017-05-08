@@ -20,7 +20,7 @@ void luoLog(int level, const char *fmt, ...) {
         fp = fopen(luo_server.log_file, "a");
     }
 
-    if (!fp) {
+    if (fp == NULL) {
         return;
     }
 
