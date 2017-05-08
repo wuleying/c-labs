@@ -26,13 +26,12 @@ void luoLog(int level, const char *fmt, ...) {
 
     va_start(ap, fmt);
     if (level >= luo_server.log_level) {
-        char   *c = ".-*";
         char   buf[64];
         time_t now;
 
         now = time(NULL);
         strftime(buf, 64, "%F %H:%M:%S", gmtime(&now));
-        fprintf(fp, "%s %c ", buf, c[level]);
+        fprintf(fp, "%s [%s] ", buf, log_level_array[level]);
         vfprintf(fp, fmt, ap);
         fprintf(fp, "\n");
         fflush(fp);

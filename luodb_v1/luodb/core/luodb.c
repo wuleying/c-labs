@@ -20,10 +20,10 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Usage: bin/luodb [/path/to/luodb.conf]\n");
         exit(1);
     } else {
-        luoLog(LUO_LOG_WARNING, "Warning: no config file specified, using the default config.");
+        luoLog(LUO_LOG_WARNING, "No config file specified, using the default config.");
     }
 
-    luoLog(LUO_LOG_NOTICE, "Luodb start success, config file path: [%s]", argv[1]);
+    luoLog(LUO_LOG_NOTICE, "Luodb start success, %s %s", argv[0], argv[1]);
 
     return 0;
 }
