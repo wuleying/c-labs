@@ -93,6 +93,13 @@ loadServerConfig(char *file_name) {
                 goto _displayError;
             }
         }
+
+        for (i = 0; i < argc; ++i) {
+            luoStrFree(argv[i]);
+        }
+
+        luoFree(argv);
+        luoStrFree(line);
     }
 
     return;
