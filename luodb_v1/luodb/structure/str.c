@@ -327,7 +327,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
             new_tokens = luoRealloc(tokens, sizeof(luo_str) * slots);
 
             if (new_tokens == NULL) {
-                goto cleanup;
+                goto _cleanup;
             }
 
             tokens = new_tokens;
@@ -337,7 +337,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
             tokens[elements] = luoStrCreate(s + start, i - start);
 
             if (tokens[elements] == NULL) {
-                goto cleanup;
+                goto _cleanup;
             }
 
             elements++;
@@ -351,7 +351,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
     tokens[elements] = luoStrCreate(s + start, len - start);
 
     if (tokens[elements] == NULL) {
-        goto cleanup;
+        goto _cleanup;
     }
 
     elements++;
@@ -359,7 +359,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
 
     return tokens;
 
-    cleanup:
+    _cleanup:
     {
         for (int i = 0; i < elements; ++i) {
             luoFree(tokens[i]);

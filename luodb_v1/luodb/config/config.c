@@ -54,7 +54,7 @@ loadServerConfig(char *file_name) {
 
             if (luo_server.port < 1 || luo_server.port > 65535) {
                 err = "Invalid port";
-                goto displayError;
+                goto _displayError;
             }
         }
 
@@ -74,7 +74,7 @@ loadServerConfig(char *file_name) {
                 if (log_fp == NULL) {
                     err = luoStrCatPrintf(luoStrEmpty(), "Can't open the log file: [%s]", strerror(errno));
 
-                    goto displayError;
+                    goto _displayError;
                 }
                 fclose(log_fp);
             }
@@ -90,14 +90,14 @@ loadServerConfig(char *file_name) {
                 luo_server.log_level = LUO_LOG_WARNING;
             } else {
                 err = "Invaild log level. Must be one of debug, notice, warning.";
-                goto displayError;
+                goto _displayError;
             }
         }
     }
 
     return;
 
-    displayError:
+    _displayError:
     {
         fprintf(stderr, "\n*** FATAL CONFIG FILE ERROR ***\n");
         fprintf(stderr, "Reading the configuration file, at line %d\n", line_num);
