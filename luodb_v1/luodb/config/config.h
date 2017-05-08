@@ -35,7 +35,7 @@ struct luo_server_s {
     int port;
     int fd;
 
-    char *log_file_path;
+    char *log_path;
     int  log_level;
 };
 

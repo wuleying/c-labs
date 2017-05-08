@@ -13,7 +13,7 @@
 void
 initServerConfig() {
     luo_server.port          = LUO_SERVER_TCP_PORT;
-    luo_server.log_file_path = NULL;
+    luo_server.log_path = NULL;
     luo_server.log_level     = LUO_LOG_DEUBG;
 }
 
@@ -59,12 +59,12 @@ loadServerConfig(char *file_name) {
         }
 
         // 日志文件路径
-        if (!strcasecmp(argv[0], "log_file_path") && argc == 2) {
-            luo_server.log_file_path = luoStrdup(argv[1]);
+        if (!strcasecmp(argv[0], "log_path") && argc == 2) {
+            luo_server.log_path = luoStrdup(argv[1]);
 
-            if (!strcasecmp(luo_server.log_file_path, "stdout")) {
-                luoFree(luo_server.log_file_path);
-                luo_server.log_file_path = NULL;
+            if (!strcasecmp(luo_server.log_path, "stdout")) {
+                luoFree(luo_server.log_path);
+                luo_server.log_path = NULL;
             }
         }
 

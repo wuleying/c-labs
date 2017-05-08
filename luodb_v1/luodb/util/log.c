@@ -19,12 +19,12 @@ luoLog(int level, const char *fmt, ...) {
     char    log_file[1024];
     time_t  now = time(NULL);
 
-    if (luo_server.log_file_path == NULL) {
+    if (luo_server.log_path == NULL) {
         fp = stdout;
     } else {
         strftime(date_buf, 64, "%G/%m", gmtime(&now));
 
-        sprintf(log_path, "%s/%s", luo_server.log_file_path, date_buf);
+        sprintf(log_path, "%s/%s", luo_server.log_path, date_buf);
 
         luoMakeDirs(log_path);
 
@@ -48,7 +48,7 @@ luoLog(int level, const char *fmt, ...) {
     }
     va_end(ap);
 
-    if (luo_server.log_file_path) {
+    if (luo_server.log_path) {
         fclose(fp);
     }
 }
