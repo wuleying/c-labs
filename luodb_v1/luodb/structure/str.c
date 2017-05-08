@@ -333,8 +333,31 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
             tokens = new_tokens;
         }
 
-        //todo
+        if ((sep_len == 1 && *(s + i) == sep[0]) || (memcmp(s + i, sep, (size_t) sep_len) == 0)) {
+            tokens[elements] = luoStrCreate(s + start, i - start);
+
+            if (tokens[elements] == NULL) {
+                goto cleanup;
+            }
+
+            elements++;
+
+            start = i + sep_len;
+
+            i = i + sep_len - 1;
+        }
     }
+
+    tokens[elements] = luoStrCreate(s + start, len - start);
+
+    if (tokens[elements] == NULL) {
+        goto cleanup;
+    }
+
+    elements++;
+    *count = elements;
+
+    return tokens;
 
     cleanup:
     {
