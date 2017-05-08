@@ -6,12 +6,16 @@
 
 void
 luoMakeDirs(char *mul_dir) {
-    int    i;
-    size_t len;
-    char   str[512];
-    strncpy(str, mul_dir, 512);
+    int  i;
+    long len;
 
-    len = strlen(str);
+    luo_str str = luoStrNew(mul_dir);
+    len = luoStrLen(str);
+
+    // 检查目录是否存在
+    if (access(str, 0) == 0) {
+        return;
+    }
 
     for (i = 0; i < len; i++) {
         if (str[i] == '/') {
