@@ -12,5 +12,6 @@
 #define LUODB_HEADER_UTIL_H
 
 #include <luodb/util/log.h>
+#include <luodb/util/file.h>
 
 #endif //LUODB_HEADER_UTIL_H

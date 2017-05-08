@@ -191,8 +191,8 @@ luo_str
 luoStrTrim(luo_str ls, const char *c) {
     struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);
 
-    char *start, *end, *sp, *ep;
-    long len;
+    char   *start, *end, *sp, *ep;
+    size_t len;
 
     sp = start = ls;
     ep = end   = ls + luoStrLen(ls) - 1;
@@ -209,11 +209,11 @@ luoStrTrim(luo_str ls, const char *c) {
 
     if (lss->buf != sp) {
         memmove(lss->buf, sp, len);
-        lss->buf[len] = '\0';
-        lss->free = lss->free + (lss->len - len);
-        lss->len  = len;
     }
 
+    lss->buf[len] = '\0';
+    lss->free = lss->free + (lss->len - len);
+    lss->len  = len;
     return ls;
 }
 

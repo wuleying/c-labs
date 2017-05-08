@@ -15,6 +15,7 @@ SET(SOURCE_SRC
         structure/dlist.c
         structure/str.c
         util/log.c
+        util/file.c
         )
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_SRC})

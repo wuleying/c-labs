@@ -8,15 +8,16 @@
 // Created by luoliang1 on 2017/5/5.
 //
 
-#ifndef LUODB_LOG_H
-#define LUODB_LOG_H
+#ifndef LUODB_UTIL_LOG_H
+#define LUODB_UTIL_LOG_H
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
 
 #include <luodb/config/config.h>
+#include <luodb/util/file.h>
 
 void luoLog(int level, const char *fmt, ...);
 
-#endif //LUODB_LOG_H
+#endif //LUODB_UTIL_LOG_H
