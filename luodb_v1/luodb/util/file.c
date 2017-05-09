@@ -5,7 +5,7 @@
 #include <luodb/util/file.h>
 
 void
-luoMakeDirs(char *mul_dir) {
+luoFileMakeDirs(char *mul_dir) {
     int  i;
     long len;
 

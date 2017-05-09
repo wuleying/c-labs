@@ -11,6 +11,6 @@
 
 #include <luodb/structure/str.h>
 
-void luoMakeDirs(char *mul_dir);
+void luoFileMakeDirs(char *mul_dir);
 
 #endif //LUODB_UTIL_FILE_H
