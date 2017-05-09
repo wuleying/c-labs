@@ -23,13 +23,6 @@
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024
 
-// 日志级别
-#define LUO_LOG_DEUBG           0
-#define LUO_LOG_NOTICE          1
-#define LUO_LOG_WARNING         2
-
-static char *log_level_array[] = {"Debug", "Notice", "Warning"};
-
 // 服务端配置
 struct luo_server_s {
     int port;

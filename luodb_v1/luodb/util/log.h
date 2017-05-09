@@ -18,6 +18,15 @@
 #include <luodb/config/config.h>
 #include <luodb/util/file.h>
 
+// 日志级别
+#define LUO_LOG_DEUBG           0
+#define LUO_LOG_NOTICE          1
+#define LUO_LOG_WARNING         2
+#define LUO_LOG_ERROR           3
+
+static char *log_level_array[] = {"Debug", "Notice", "Warning", "Error"};
+
+// 记录日志
 void luoLog(int level, const char *fmt, ...);
 
 #endif //LUODB_UTIL_LOG_H
