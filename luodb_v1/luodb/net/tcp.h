@@ -13,11 +13,20 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <netinet/in.h>
+#include <errno.h>
+#include <memory.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
 
-#define LUO_TCP_OK 0
-#define LUO_TCP_ERR -1
+#define LUO_TCP_OK                  0
+#define LUO_TCP_ERR                 -1
 
-#define LUO_TCP_ERR_LEN 256
+#define LUO_TCP_ERR_LEN             256
+
+#define LUO_TCP_CONNECT_NONE        0
+#define LUO_TCP_CONNECT_NONBLOCK    1
 
 int luoTcpConnect(char *err, char *addr, int port);
 
@@ -25,13 +34,13 @@ int luoTcpNonBlockConnect(char *err, char *addr, int port);
 
 int luoTcpRead(int fd, char *buf, int count);
 
+int luoTcpWrite(int fd, char *buf, int count);
+
 int luoTcpResolve(char *err, char *host, char *ip_buf);
 
 int luoTcpServer(char *err, int port, char *bind_addr);
 
 int luoTcpAccept(char *err, int server_sock, char *ip, int *port);
-
-int luoTcpWrite(int fd, char *buf, int count);
 
 int luoTcpNonBlock(char *err, int fd);
 

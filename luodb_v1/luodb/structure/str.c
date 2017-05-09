@@ -128,23 +128,23 @@ luo_str
 luoStrCopyLen(luo_str ls, char *t, long len) {
     struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);
 
-    long totle_len = lss->free + lss->len;
+    long total_len = lss->free + lss->len;
 
-    if (totle_len < len) {
-        ls = luoStrMakeRoomFor(ls, len - totle_len);
+    if (total_len < len) {
+        ls = luoStrMakeRoomFor(ls, len - total_len);
         if (ls == NULL) {
             return NULL;
         }
 
         lss = (void *) (ls - LUO_STR_LEN);
 
-        totle_len = lss->free + lss->len;
+        total_len = lss->free + lss->len;
     }
 
     memcpy(ls, t, len);
     ls[len] = '\0';
     lss->len  = len;
-    lss->free = totle_len - len;
+    lss->free = total_len - len;
 
     return ls;
 }
