@@ -9,6 +9,8 @@
 //
 
 #include <luodb/net/tcp.h>
+#include <fcntl.h>
+#include <netinet/tcp.h>
 
 static void
 luoTcpSetError(char *err, const char *fmt, ...) {
@@ -133,30 +135,141 @@ luoTcpWrite(int fd, char *buf, int count) {
 
 int
 luoTcpResolve(char *err, char *host, char *ip_buf) {
-    return 0;
+    struct sockaddr_in sa;
+
+    sa.sin_family = AF_INET;
+
+    if (inet_aton(host, &sa.sin_addr) == 0) {
+        struct hostent *he;
+
+        he = gethostbyname(host);
+
+        if (he == NULL) {
+            luoTcpSetError(err, "Can't resolve: %s\n", host);
+        }
+
+        memcpy(&sa.sin_addr, he->h_addr, sizeof(struct in_addr));
+    }
+    strcpy(ip_buf, inet_ntoa(sa.sin_addr));
+
+    return LUO_TCP_OK;
 }
 
 int
 luoTcpServer(char *err, int port, char *bind_addr) {
-    return 0;
+    int s, on = 1;
+
+    struct sockaddr_in sa;
+
+    if ((s = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        luoTcpSetError(err, "Socket: %s\n", strerror(errno));
+        return LUO_TCP_ERR;
+    }
+
+    if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == -1) {
+        luoTcpSetError(err, "setsockopt SO_REUSEADDR: %s\n", strerror(errno));
+        close(s);
+        return LUO_TCP_ERR;
+    }
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sin_family      = AF_INET;
+    sa.sin_port        = htons(port);
+    sa.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind_addr && inet_aton(bind_addr, &sa.sin_addr) == 0) {
+        luoTcpSetError(err, "Invaild bind address\n");
+        close(s);
+        return LUO_TCP_ERR;
+    }
+
+    if (bind(s, (struct sockaddr *) &sa, sizeof(sa)) == -1) {
+        luoTcpSetError(err, "Bind: %s\n", strerror(errno));
+        close(s);
+        return LUO_TCP_ERR;
+    }
+
+    if (listen(s, 64) == -1) {
+        luoTcpSetError(err, "Listen: %s\n", strerror(errno));
+        close(s);
+        return LUO_TCP_ERR;
+    }
+
+    return s;
 }
 
 int
 luoTcpAccept(char *err, int server_sock, char *ip, int *port) {
-    return 0;
+    int                fd;
+    struct sockaddr_in sa;
+    unsigned int       sa_len;
+
+    while (1) {
+        sa_len = sizeof(sa);
+
+        fd = accept(server_sock, (struct sockaddr *) &sa, &sa_len);
+
+        if (fd == -1) {
+            if (errno == EINTR) {
+                continue;
+            } else {
+                luoTcpSetError(err, "Accept: %s\n", strerror(errno));
+                return LUO_TCP_ERR;
+            }
+        }
+
+        break;
+    }
+
+    if (ip) {
+        strcpy(ip, inet_ntoa(sa.sin_addr));
+    }
+
+    if (port) {
+        *port = ntohs(sa.sin_port);
+    }
+
+    return fd;
 }
 
 int
 luoTcpNonBlock(char *err, int fd) {
-    return 0;
+    int flag;
+
+    if ((flag = fcntl(fd, F_GETFL)) == -1) {
+        luoTcpSetError(err, "fcntl(F_GETFL) %s\n", strerror(errno));
+        return LUO_TCP_ERR;
+    }
+
+    if (fcntl(fd, F_SETFL, flag | O_NONBLOCK) == -1) {
+        luoTcpSetError(err, "fcntl(F_SETFL, O_NONBLOCK) %s\n", strerror(errno));
+        return LUO_TCP_ERR;
+    }
+
+    return LUO_TCP_OK;
 }
 
 int
 luoTcpNoDelay(char *err, int fd) {
-    return 0;
+    int yes = 1;
+
+    if (setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes)) == -1) {
+        luoTcpSetError(err, "setsockopt TCP_NODELAY: %s\n", strerror(errno));
+        return LUO_TCP_ERR;
+    }
+
+    return LUO_TCP_OK;
 }
 
 int
 luoTcpKeepAlive(char *err, int fd) {
-    return 0;
+    int yes = 1;
+
+    if (setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &yes, sizeof(yes)) == -1) {
+        luoTcpSetError(err, "setsockopt SO_KEEPALIVE: %s\n", strerror(errno));
+        return LUO_TCP_ERR;
+    }
+
+    return LUO_TCP_OK;
 }
