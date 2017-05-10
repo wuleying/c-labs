@@ -167,7 +167,7 @@ luoTcpServer(char *err, int port, char *bind_addr) {
     }
 
     if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == -1) {
-        luoTcpSetError(err, "setsockopt SO_REUSEADDR: %s\n", strerror(errno));
+        luoTcpSetError(err, "setsockopt(SO_REUSEADDR): %s\n", strerror(errno));
         close(s);
         return LUO_TCP_ERR;
     }
