@@ -23,6 +23,11 @@ int main(int argc, char *argv[]) {
         luoLog(LUO_LOG_WARNING, "No config file specified, using the default config.");
     }
 
+    char *ser_err = NULL;
+    luo_server.fd = luoTcpServer(ser_err, luo_server.port, NULL);
+
+    printf("fd:%d", luo_server.fd);
+
     luoLog(LUO_LOG_NOTICE, "Luodb start success, %s %s", argv[0], argv[1]);
 
     return 0;
