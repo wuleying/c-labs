@@ -39,4 +39,4 @@ if [[ -f "$bin_dir"/"$project_name" ]]; then
     chmod +x "$bin_dir"/"$project_name"
 fi
 
-echo "done."
+echo "cmake done."
