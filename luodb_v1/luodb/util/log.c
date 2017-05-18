@@ -16,25 +16,25 @@ luoLog(int level, const char *fmt, ...) {
     FILE    *fp;
     time_t  now = time(NULL);
 
-    if (luo_server.log_path == NULL) {
+    if (luo_server.log_file_dir == NULL) {
         fp = stdout;
     } else {
         luo_str date_buf = luoStrCreate("", 64);
-        luo_str log_path = luoStrCreate("", 1024);
+        luo_str log_file_dir = luoStrCreate("", 1024);
         luo_str log_file = luoStrCreate("", 1024);
 
         strftime(date_buf, 64, "%G/%m", gmtime(&now));
 
-        sprintf(log_path, "%s/%s", luo_server.log_path, date_buf);
+        sprintf(log_file_dir, "%s/%s", luo_server.log_file_dir, date_buf);
 
         // 创建目录
-        luoFileMakeDirs(log_path);
+        luoFileMakeDirs(log_file_dir);
 
-        sprintf(log_file, "%s/luodb.log", log_path);
+        sprintf(log_file, "%s/luodb.log", log_file_dir);
         fp = fopen(log_file, "a");
 
         luoStrFree(date_buf);
-        luoStrFree(log_path);
+        luoStrFree(log_file_dir);
         luoStrFree(log_file);
     }
 
@@ -56,7 +56,7 @@ luoLog(int level, const char *fmt, ...) {
     }
     va_end(ap);
 
-    if (luo_server.log_path) {
+    if (luo_server.log_file_dir) {
         fclose(fp);
     }
 }

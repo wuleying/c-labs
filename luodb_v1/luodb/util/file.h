@@ -13,4 +13,6 @@
 
 void luoFileMakeDirs(char *mul_dir);
 
+void luoFileSavePid(char *pid_file_path, pid_t pid);
+
 #endif //LUODB_UTIL_FILE_H

@@ -25,11 +25,11 @@
 
 // 服务端配置
 struct luo_server_s {
-    int port;
-    int fd;
-
-    char *log_path;
-    int  log_level;
+    int  port;                  // 端口
+    int  fd;                    // file descriptor
+    char *pid_file_path;        // pid 文件路径
+    char *log_file_dir;         // 日志文件目录
+    int  log_level;             // 日志级别
 };
 
 struct luo_server_s luo_server;

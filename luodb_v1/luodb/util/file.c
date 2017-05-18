@@ -30,3 +30,13 @@ luoFileMakeDirs(char *mul_dir) {
         mkdir(str, 0755);
     }
 }
+
+void
+luoFileSavePid(char *pid_file_path, pid_t pid) {
+    // 保存pid
+    FILE *fp = fopen(pid_file_path, "w");
+    if (fp) {
+        fprintf(fp, "%d\n", pid);
+        fclose(fp);
+    }
+}
