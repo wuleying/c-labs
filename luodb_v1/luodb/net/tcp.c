@@ -9,8 +9,6 @@
 //
 
 #include <luodb/net/tcp.h>
-#include <fcntl.h>
-#include <netinet/tcp.h>
 
 static void
 luoTcpSetError(char *err, const char *fmt, ...) {

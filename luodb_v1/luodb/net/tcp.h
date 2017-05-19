@@ -13,12 +13,14 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <netinet/in.h>
 #include <errno.h>
 #include <memory.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #define LUO_TCP_OK                  0
 #define LUO_TCP_ERR                 -1

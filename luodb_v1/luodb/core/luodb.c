@@ -32,7 +32,19 @@ int main(int argc, char *argv[]) {
     char *ser_err = NULL;
     luo_server.fd = luoTcpServer(ser_err, luo_server.port, NULL);
 
-    luoTcpAccept(ser_err, luo_server.fd, "127.0.0.1", &luo_server.port);
+    fprintf(stdout, "luo_server.fd = %d\n", luo_server.fd);
+
+    /*
+    struct sockaddr_in sa;
+    char *ip = luoStrCreate("127.0.0.1", sizeof(sa) + 1);
+
+    int cfd = luoTcpAccept(ser_err, luo_server.fd, ip, &luo_server.port);
+
+    if(cfd == -1) {
+        fprintf(stderr, "Tcp accept failed\n");
+        exit(1);
+    }
+    */
 
     return 0;
 }
