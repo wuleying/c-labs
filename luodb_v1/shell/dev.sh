@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 pwd;
-shell/cmake.sh
 shell/stop.sh
+shell/cmake.sh
 shell/start.sh
