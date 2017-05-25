@@ -63,6 +63,9 @@ typedef struct luo_event_loop_s {
 
 #define LUO_EVENT_NOMORE        -1
 
+/* 宏定义 */
+#define LUO_NOTUSED(V)          ((void) V)
+
 /* 接口 */
 luo_event_loop *luoEventLoopCreate(void);
 
@@ -70,12 +73,12 @@ void luoEventLoopDelete(luo_event_loop *event_loop);
 
 void luoEventStop(luo_event_loop *event_loop);
 
-int luoEventFileCreate(luo_event_loop *event_loop, int fd, int mask, luo_file_proc *proc, void *client_data,
+int luoEventFileCreate(luo_event_loop *event_loop, int fd, int mask, luo_file_proc *file_proc, void *client_data,
                        luo_event_finalizer_proc *finalizer_proc);
 
 void luoEventFileDelete(luo_event_loop *event_loop, int fd, int mask);
 
-long long luoEventTimeCreate(luo_event_loop *event_loop, long long milli_seconds, luo_time_proc *proc,
+long long luoEventTimeCreate(luo_event_loop *event_loop, long long milli_seconds, luo_time_proc *time_proc,
                              void *client_data, luo_event_finalizer_proc *finalizer_proc);
 
 int luoEventTimeDelete(luo_event_loop *event_loop, long long id);
