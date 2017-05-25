@@ -13,40 +13,40 @@
 
 struct luo_event_loop_s;
 
-typedef void luo_file_proc_t(struct luo_event_loop_s *event_loop, int fd, void *client_data, int mask);
+typedef void luo_file_proc(struct luo_event_loop_s *event_loop, int fd, void *client_data, int mask);
 
-typedef int luo_time_proc_t(struct luo_event_loop_s *event_loop, long long id, void *client_data);
+typedef int luo_time_proc(struct luo_event_loop_s *event_loop, long long id, void *client_data);
 
-typedef void luo_event_finalizer_proc_t(struct luo_event_loop_s *event_loop, void *client_data);
+typedef void luo_event_finalizer_proc(struct luo_event_loop_s *event_loop, void *client_data);
 
 typedef struct luo_file_event_s {
-    int                        fd;
-    int                        mask;
-    luo_file_proc_t            *file_proc;
-    luo_event_finalizer_proc_t *finalizer_proc;
-    void                       *client_data;
-    struct luo_file_event_s    *next;
+    int                      fd;
+    int                      mask;
+    luo_file_proc            *file_proc;
+    luo_event_finalizer_proc *finalizer_proc;
+    void                     *client_data;
+    struct luo_file_event_s  *next;
 
-} luo_file_event_t;
+} luo_file_event;
 
 typedef struct luo_time_event_s {
-    long long                  id;
-    long                       when_sec;
-    long                       when_ms;
-    luo_time_proc_t            *time_proc;
-    luo_event_finalizer_proc_t *finalizer_proc;
-    void                       *client_data;
-    struct luo_time_event_s    *next;
+    long long                id;
+    long                     when_sec;
+    long                     when_ms;
+    luo_time_proc            *time_proc;
+    luo_event_finalizer_proc *finalizer_proc;
+    void                     *client_data;
+    struct luo_time_event_s  *next;
 
-} luo_time_event_t;
+} luo_time_event;
 
 typedef struct luo_event_loop_s {
-    long long        time_event_next_id;
-    luo_file_event_t *file_event_head;
-    luo_time_event_t *time_event_head;
-    int              stop;
+    long long      time_event_next_id;
+    luo_file_event *file_event_head;
+    luo_time_event *time_event_head;
+    int            stop;
 
-} luo_event_loop_t;
+} luo_event_loop;
 
 /* 常量 */
 #define LUO_EVENT_OK            0
@@ -62,5 +62,28 @@ typedef struct luo_event_loop_s {
 #define LUO_EVENT_DONE_WAIT     4
 
 #define LUO_EVENT_NOMORE        -1
+
+/* 接口 */
+luo_event_loop *luoEventLoopCreate(void);
+
+void luoEventLoopDelete(luo_event_loop *event_loop);
+
+void luoEventStop(luo_event_loop *event_loop);
+
+int luoEventFileCreate(luo_event_loop *event_loop, int fd, int mask, luo_file_proc *proc, void *client_data,
+                       luo_event_finalizer_proc *finalizer_proc);
+
+void luoEventFileDelete(luo_event_loop *event_loop, int fd, int mask);
+
+long long luoEventTimeCreate(luo_event_loop *event_loop, long long milli_seconds, luo_time_proc *proc,
+                             void *client_data, luo_event_finalizer_proc *finalizer_proc);
+
+int luoEventTimeDelete(luo_event_loop *event_loop, long long id);
+
+int luoEventProcessEvents(luo_event_loop *event_loop, int flags);
+
+int luoEventWait(int fd, int mask, long long milli_seconds);
+
+void luoEventMain(luo_event_loop *event_loop);
 
 #endif //LUODB_EVENT_H
