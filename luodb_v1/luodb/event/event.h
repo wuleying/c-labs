@@ -11,6 +11,11 @@
 #ifndef LUODB_EVENT_H
 #define LUODB_EVENT_H
 
+#include <luodb/memory/mem.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 struct luo_event_loop_s;
 
 typedef void luo_file_proc(struct luo_event_loop_s *event_loop, int fd, void *client_data, int mask);

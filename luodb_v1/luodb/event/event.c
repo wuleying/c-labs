@@ -9,8 +9,6 @@
 //
 
 #include <luodb/event/event.h>
-#include <luodb/memory/mem.h>
-#include <sys/time.h>
 
 luo_event_loop *
 luoEventLoopCreate(void) {
