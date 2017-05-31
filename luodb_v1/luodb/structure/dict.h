@@ -25,7 +25,7 @@ typedef struct luo_dict_type_s {
 
     void *(*val_dup)(void *priv_data, const void *object);
 
-    int          (*val_compare)(void *priv_data, const void *key1, const void *key2);
+    int          (*key_compare)(void *priv_data, const void *key1, const void *key2);
 
     void         (*key_destructor)(void *priv_data, void *key);
 
@@ -79,9 +79,57 @@ typedef struct luo_dict_iterator_s {
         entry->key = (_key_);                                           \
 } while(0)
 
-#define dict_compare_hash_keys(dict, key1, key2)                        \
+#define DICT_COMPARE_HASH_KEYS(dict, key1, key2)                        \
     (((dict)->type->key_compare) ?                                      \
         (dict)->type->key_compare((dict)->priv_data, key1, key2) :      \
         (key1) == (key2))
+
+#define DICT_HASH_KEY(dict, key) (dict)->type->hashFunction(key)
+
+#define DICT_GET_ENTRY_KEY(dict_entry) ((dict_entry)->key)
+
+#define DICT_GET_ENTRY_VAL(dict_entry) ((dict_entry)->val)
+
+#define DICT_GET_SIZE(dict) ((dict)->size)
+
+#define DICT_GET_USED(dict) ((dict)->used)
+
+/* 接口 */
+luo_dict *luoDictCreate(luo_dict_type *type, void *priv_data_ptr);
+
+int luoDictExpand(luo_dict *dict, unsigned long size);
+
+int luoDictAdd(luo_dict *dict, void *key, void *val);
+
+int luoDictReplace(luo_dict *dict, void *key, void *val);
+
+int luoDictDelete(luo_dict *dict, const void *key);
+
+int luoDictDeleteNoFree(luo_dict *dict, const void *key);
+
+void luoDictRelease(luo_dict *dict);
+
+luo_dict_entry *luoDictFind(luo_dict *dict, const void *key);
+
+int luoDictResize(luo_dict *dict);
+
+luo_dict_iterator *luoDictGetInterator(luo_dict *dict);
+
+luo_dict_entry *luoDictNext(luo_dict_iterator *iter);
+
+void luoDictReleaseIterator(luo_dict_iterator *iter);
+
+luo_dict_entry *luoDictGetRandomKey(luo_dict *dict);
+
+void luoDictPrintStats(luo_dict *dict);
+
+unsigned int luoDictGenHashFunction(const unsigned char *buf, int len);
+
+void luoDictEmpty(luo_dict *dict);
+
+/* 哈希表类型 */
+extern luo_dict_type luoDictTypeHeapStringCopyKey;
+extern luo_dict_type luoDictTypeHeapStrings;
+extern luo_dict_type luoDictTypeHeapStringCopyKeyValue;
 
 #endif //LUODB_DICT_H
