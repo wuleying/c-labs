@@ -112,6 +112,78 @@ _luoDictKeyIndex(luo_dict *dict, const void *key) {
     return h;
 }
 
+static int
+_luoDictGenericDelete(luo_dict *dict, const void *key, int nofree) {
+    unsigned int   h;
+    luo_dict_entry *dict_entry;
+    luo_dict_entry *dict_entry_prev = NULL;
+
+    if (dict->size == 0) {
+        return LUO_DICT_ERR;
+    }
+
+    h = (unsigned int) (LUO_DICT_HASH_KEY(dict, key) & dict->size_mask);
+
+    dict_entry = dict->table[h];
+
+    while (dict_entry) {
+        if (LUO_DICT_COMPARE_HASH_KEYS(dict, key, dict_entry->key)) {
+            if (dict_entry_prev) {
+                dict_entry_prev->next = dict_entry->next;
+            } else {
+                dict->table[h] = dict_entry->next;
+            }
+
+            if (!nofree) {
+                LUO_DICT_FREE_ENTRY_KEY(dict, dict_entry);
+                LUO_DICT_FREE_ENTRY_VAL(dict, dict_entry);
+            }
+
+            _luoDictFree(dict_entry);
+            dict->used--;
+
+            return LUO_DICT_OK;
+        }
+
+        dict_entry_prev = dict_entry;
+        dict_entry      = dict_entry->next;
+    }
+
+    return LUO_DICT_ERR;
+}
+
+int
+_luoDictClear(luo_dict *dict) {
+    unsigned long i;
+
+    for (i = 0; i < dict->size && dict->used > 0; i++) {
+        luo_dict_entry *dict_entry;
+        luo_dict_entry *dict_entry_next;
+
+        dict_entry = dict->table[i];
+
+        if (dict_entry == NULL) {
+            continue;
+        }
+
+        while (dict_entry) {
+            dict_entry_next = dict_entry->next;
+
+            LUO_DICT_FREE_ENTRY_KEY(dict, dict_entry);
+            LUO_DICT_FREE_ENTRY_VAL(dict, dict_entry);
+
+            _luoDictFree(dict_entry);
+            dict->used--;
+            dict_entry = dict_entry_next;
+        }
+    }
+
+    _luoDictFree(dict->table);
+    _luoDictReset(dict);
+
+    return LUO_DICT_OK;
+}
+
 unsigned int
 luoDictIntHashFunction(unsigned int key) {
     key += ~(key << 15);
@@ -239,4 +311,44 @@ luoDictReplace(luo_dict *dict, void *key, void *val) {
     LUO_DICT_SET_HASH_VAL(dict, entry, val);
 
     return LUO_DICT_OK;
+}
+
+int
+luoDictDelete(luo_dict *dict, const void *key) {
+    return _luoDictGenericDelete(dict, key, 0);
+}
+
+int
+luoDictDeleteNoFree(luo_dict *dict, const void *key) {
+    return _luoDictGenericDelete(dict, key, 1);
+}
+
+void
+luoDictRelease(luo_dict *dict) {
+    _luoDictClear(dict);
+    _luoDictFree(dict);
+}
+
+luo_dict_entry *
+luoDictFind(luo_dict *dict, const void *key) {
+    luo_dict_entry *dict_entry;
+    unsigned int   h;
+
+    if (dict->size == 0) {
+        return NULL;
+    }
+
+    h = (unsigned int) (LUO_DICT_HASH_KEY(dict, key) && dict->size_mask);
+
+    dict_entry = dict->table[h];
+
+    while (dict_entry) {
+        if (LUO_DICT_COMPARE_HASH_KEYS(dict, key, dict_entry->key)) {
+            return dict_entry;
+        }
+
+        dict_entry = dict_entry->next;
+    }
+
+    return NULL;
 }
