@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     char *ser_err = NULL;
     luo_server.fd = luoTcpServer(ser_err, luo_server.port, NULL);
 
-    luoLog(LUO_LOG_NOTICE, "luo_server.fd = %d\n", luo_server.fd);
+    luoLog(LUO_LOG_NOTICE, "luo_server.fd = %d", luo_server.fd);
 
     /*
     struct sockaddr_in sa;
