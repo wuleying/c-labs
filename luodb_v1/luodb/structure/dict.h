@@ -45,7 +45,7 @@ typedef struct luo_dict_iterator_s {
     luo_dict       *dict;
     int            index;
     luo_dict_entry *entry;
-    luo_dict_entry *next_entry;
+    luo_dict_entry *entry_next;
 } luo_dict_iterator;
 
 /* 常量 */
@@ -53,6 +53,8 @@ typedef struct luo_dict_iterator_s {
 #define LUO_DICT_ERR            1
 
 #define LUO_DICT_INITIAL_SIZE   16
+
+#define LUO_DICT_STATS_VECTLEN  50
 
 /* 宏定义 */
 #define LUO_DICT_NOT_USED(V) ((void) V)

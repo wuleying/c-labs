@@ -156,7 +156,7 @@ int
 _luoDictClear(luo_dict *dict) {
     unsigned long i;
 
-    for (i = 0; i < dict->size && dict->used > 0; i++) {
+    for (i = 0; i < dict->size && dict->used > 0; ++i) {
         luo_dict_entry *dict_entry;
         luo_dict_entry *dict_entry_next;
 
@@ -241,7 +241,7 @@ luoDictExpand(luo_dict *dict, unsigned long size) {
 
     new_dict.used = dict->used;
 
-    for (i = 0; i < dict->size && dict->used > 0; i++) {
+    for (i = 0; i < dict->size && dict->used > 0; ++i) {
         luo_dict_entry *dict_entry;
         luo_dict_entry *dict_entry_next;
 
@@ -351,4 +351,158 @@ luoDictFind(luo_dict *dict, const void *key) {
     }
 
     return NULL;
+}
+
+int
+luoDictResize(luo_dict *dict) {
+    unsigned long mini_mal = dict->used;
+
+    if (mini_mal < LUO_DICT_INITIAL_SIZE) {
+        mini_mal = LUO_DICT_INITIAL_SIZE;
+    }
+
+    return luoDictExpand(dict, mini_mal);
+}
+
+luo_dict_iterator *
+luoDictGetInterator(luo_dict *dict) {
+    luo_dict_iterator *iter = _luoDictAlloc(sizeof(luo_dict_iterator));
+
+    iter->dict       = dict;
+    iter->index      = -1;
+    iter->entry      = NULL;
+    iter->entry_next = NULL;
+
+    return iter;
+}
+
+luo_dict_entry *
+luoDictNext(luo_dict_iterator *iter) {
+    while (1) {
+        if (iter->entry == NULL) {
+            iter->index++;
+
+            if (iter->index >= (signed) iter->dict->size) {
+                break;
+            }
+
+            iter->entry = iter->dict->table[iter->index];
+        } else {
+            iter->entry = iter->entry_next;
+        }
+
+        if (iter->entry) {
+            iter->entry_next = iter->entry->next;
+
+            return iter->entry;
+        }
+    }
+
+    return NULL;
+}
+
+void
+luoDictReleaseIterator(luo_dict_iterator *iter) {
+    _luoDictFree(iter);
+}
+
+luo_dict_entry *
+luoDictGetRandomKey(luo_dict *dict) {
+    luo_dict_entry *dict_entry;
+    unsigned int   h;
+    int            list_len = 0;
+    int            list_ele;
+
+    if (dict->used == 0) {
+        return NULL;
+    }
+
+    do {
+        h = (unsigned int) (random() & dict->size_mask);
+
+        dict_entry = dict->table[h];
+    } while (dict_entry == NULL);
+
+    while (dict_entry) {
+        dict_entry = dict_entry->next;
+        list_len++;
+    }
+
+    list_ele   = (int) (random() % list_len);
+    dict_entry = dict->table[h];
+
+    while (list_ele--) {
+        dict_entry = dict_entry->next;
+    }
+
+    return dict_entry;
+}
+
+void
+luoDictPrintStats(luo_dict *dict) {
+    unsigned long i;
+    unsigned long slots           = 0;
+    unsigned long chain_len;
+    unsigned long max_chain_len   = 0;
+    unsigned long total_chain_len = 0;
+    unsigned long clvector[LUO_DICT_STATS_VECTLEN];
+
+    if (dict->used == 0) {
+        printf("No stats available for empty dictionaries\n");
+        return;
+    }
+
+    for (i = 0; i < LUO_DICT_STATS_VECTLEN; ++i) {
+        clvector[i] = 0;
+    }
+
+    for (i = 0; i < dict->size; ++i) {
+        luo_dict_entry *dict_entry;
+
+        if (dict->table[i] == NULL) {
+            clvector[0]++;
+            continue;
+        }
+
+        slots++;
+
+        chain_len  = 0;
+        dict_entry = dict->table[i];
+
+        while (dict_entry) {
+            chain_len++;
+            dict_entry = dict_entry->next;
+        }
+
+        clvector[(chain_len < LUO_DICT_STATS_VECTLEN) ? chain_len : (LUO_DICT_STATS_VECTLEN - 1)]++;
+
+        if (chain_len > max_chain_len) {
+            max_chain_len = chain_len;
+        }
+
+        total_chain_len += chain_len;
+
+        printf("Hash table stats:\n");
+        printf(" table size: %ld\n", dict->size);
+        printf(" number of elements: %ld\n", dict->used);
+        printf(" different slots: %ld\n", slots);
+        printf(" max chain length: %ld\n", max_chain_len);
+        printf(" avg chain length (counted): %.02f\n", (float) total_chain_len / slots);
+        printf(" avg chain length (computed): %.02f\n", (float) dict->used / slots);
+        printf(" Chain length distribution:\n");
+
+        for (i = 0; i < LUO_DICT_STATS_VECTLEN; ++i) {
+            if (clvector[i] == 0) {
+                continue;
+            }
+
+            printf("   %s%ld: %ld (%.02f%%)\n", (i == LUO_DICT_STATS_VECTLEN - 1) ? ">= " : "", i, clvector[i],
+                   ((float) clvector[i] / dict->size) * 100);
+        }
+    }
+}
+
+void
+luoDictEmpty(luo_dict *dict) {
+    _luoDictClear(dict);
 }
