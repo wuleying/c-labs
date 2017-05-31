@@ -13,14 +13,7 @@
 #include <stdio.h>
 #include <luodb/memory/mem.h>
 #include <assert.h>
-
-static int _luoDictExpandIfNeeded(luo_dict *dict);
-
-static unsigned long _luoDictNextPower(unsigned long size);
-
-static int _luoDictKeyIndex(luo_dict *dict, const void *key);
-
-static int _luoDictInit(luo_dict *dict, luo_dict_type *type, void *priv_data_ptr);
+#include <limits.h>
 
 static void
 _luoDictPanic(const char *fmt, ...) {
@@ -57,13 +50,66 @@ _luoDictReset(luo_dict *dict) {
     dict->used      = 0;
 }
 
-int
+static int
 _luoDictInit(luo_dict *dict, luo_dict_type *type, void *priv_data_ptr) {
     _luoDictReset(dict);
     dict->type      = type;
     dict->priv_data = priv_data_ptr;
 
     return LUO_DICT_OK;
+}
+
+static unsigned long
+_luoDictNextPower(unsigned long size) {
+    unsigned long i = LUO_DICT_INITIAL_SIZE;
+
+    if (size >= LONG_MAX) {
+        return LONG_MAX;
+    }
+
+    while (1) {
+        if (i >= size) {
+            return i;
+        }
+        i *= 2;
+    }
+}
+
+static int
+_luoDictExpandIfNeeded(luo_dict *dict) {
+    if (dict->size == 0) {
+        return luoDictExpand(dict, LUO_DICT_INITIAL_SIZE);
+    }
+
+    if (dict->used == dict->size) {
+        return luoDictExpand(dict, dict->size * 2);
+    }
+
+    return LUO_DICT_OK;
+}
+
+static int
+_luoDictKeyIndex(luo_dict *dict, const void *key) {
+    unsigned int   h;
+    luo_dict_entry *dict_entry;
+
+    if (_luoDictExpandIfNeeded(dict) == LUO_DICT_ERR) {
+        return -1;
+    }
+
+    h = (unsigned int) (LUO_DICT_HASH_KEY(dict, key) & dict->size_mask);
+
+    dict_entry = dict->table[h];
+
+    while (dict_entry) {
+        if (LUO_DICT_COMPARE_HASH_KEYS(dict, key, dict_entry->key)) {
+            return -1;
+        }
+
+        dict_entry = dict_entry->next;
+    }
+
+    return h;
 }
 
 unsigned int
@@ -138,7 +184,7 @@ luoDictExpand(luo_dict *dict, unsigned long size) {
 
             dict_entry_next = dict_entry->next;
 
-            h = (unsigned int) (DICT_HASH_KEY(dict, dict_entry->key) & new_dict.size_mask);
+            h = (unsigned int) (LUO_DICT_HASH_KEY(dict, dict_entry->key) & new_dict.size_mask);
 
             dict_entry->next = new_dict.table[h];
 
@@ -151,6 +197,46 @@ luoDictExpand(luo_dict *dict, unsigned long size) {
     assert(dict->used == 0);
     _luoDictFree(dict->table);
     *dict = new_dict;
+
+    return LUO_DICT_OK;
+}
+
+int
+luoDictAdd(luo_dict *dict, void *key, void *val) {
+    int index;
+
+    luo_dict_entry *entry;
+
+    if ((index = _luoDictKeyIndex(dict, key)) == -1) {
+        return LUO_DICT_ERR;
+    }
+
+    entry = _luoDictAlloc(sizeof(luo_dict_entry));
+
+    entry->next = dict->table[index];
+
+    dict->table[index] = entry;
+
+    LUO_DICT_SET_HASH_KEY(dict, entry, key);
+    LUO_DICT_SET_HASH_VAL(dict, entry, val);
+
+    dict->used++;
+
+    return LUO_DICT_OK;
+}
+
+int
+luoDictReplace(luo_dict *dict, void *key, void *val) {
+    luo_dict_entry *entry;
+
+    if (luoDictAdd(dict, key, val) == LUO_DICT_OK) {
+        return LUO_DICT_OK;
+    }
+
+    entry = luoDictFind(dict, key);
+
+    LUO_DICT_FREE_ENTRY_VAL(dict, entry);
+    LUO_DICT_SET_HASH_VAL(dict, entry, val);
 
     return LUO_DICT_OK;
 }

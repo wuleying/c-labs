@@ -61,9 +61,9 @@ typedef struct luo_dict_iterator_s {
     if((dict)->type->val_destructor)                                    \
         (dict)->type->val_destructor((dict)->priv_data, (entry)->val)
 
-#define LUO_DICT_SET_HASH_VAL(dict_entry, _val_) do {                   \
+#define LUO_DICT_SET_HASH_VAL(dict, entry, _val_) do {                   \
     if((dict)->type->val_dup)                                           \
-        entry->val = (dict)->type=>val_dup((dict)->priv_data, _val_);   \
+        entry->val = (dict)->type->val_dup((dict)->priv_data, _val_);   \
     else                                                                \
         entry->val = (_val_);                                           \
 } while(0)
@@ -79,20 +79,20 @@ typedef struct luo_dict_iterator_s {
         entry->key = (_key_);                                           \
 } while(0)
 
-#define DICT_COMPARE_HASH_KEYS(dict, key1, key2)                        \
+#define LUO_DICT_COMPARE_HASH_KEYS(dict, key1, key2)                        \
     (((dict)->type->key_compare) ?                                      \
         (dict)->type->key_compare((dict)->priv_data, key1, key2) :      \
         (key1) == (key2))
 
-#define DICT_HASH_KEY(dict, key) (dict)->type->hashFunction(key)
+#define LUO_DICT_HASH_KEY(dict, key) (dict)->type->hashFunction(key)
 
-#define DICT_GET_ENTRY_KEY(dict_entry) ((dict_entry)->key)
+#define LUO_DICT_GET_ENTRY_KEY(dict_entry) ((dict_entry)->key)
 
-#define DICT_GET_ENTRY_VAL(dict_entry) ((dict_entry)->val)
+#define LUO_DICT_GET_ENTRY_VAL(dict_entry) ((dict_entry)->val)
 
-#define DICT_GET_SIZE(dict) ((dict)->size)
+#define LUO_DICT_GET_SIZE(dict) ((dict)->size)
 
-#define DICT_GET_USED(dict) ((dict)->used)
+#define LUO_DICT_GET_USED(dict) ((dict)->used)
 
 /* 接口 */
 luo_dict *luoDictCreate(luo_dict_type *type, void *priv_data_ptr);
