@@ -13,17 +13,11 @@ echo "bin_dir:      $bin_dir"
 
 echo "cleanup start..."
 
-if [[ -d "$bin_dir" ]]; then
-    find "$bin_dir"/* -exec rm {} \;
-else
-    mkdir "$bin_dir"
-fi
+rm -rf "$bin_dir"
+rm -rf "$build_dir"
 
-if [[ -d "$build_dir" ]]; then
-    find "$build_dir"/* -exec rm -rf {} \;
-else
-    mkdir "$build_dir"
-fi
+mkdir "$bin_dir"
+mkdir "$build_dir"
 
 echo "cd $build_dir"
 cd "$build_dir" || exit

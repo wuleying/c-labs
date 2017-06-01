@@ -9,11 +9,6 @@
 //
 
 #include <luodb/structure/dict.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <luodb/memory/mem.h>
-#include <assert.h>
-#include <limits.h>
 
 static void
 _luoDictPanic(const char *fmt, ...) {

@@ -11,6 +11,12 @@
 #ifndef LUODB_DICT_H
 #define LUODB_DICT_H
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <luodb/memory/mem.h>
+#include <assert.h>
+#include <limits.h>
+
 /* 结构体 */
 typedef struct luo_dict_entry_s {
     void                    *key;
