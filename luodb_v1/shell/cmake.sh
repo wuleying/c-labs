@@ -16,6 +16,8 @@ echo "cleanup start..."
 rm -rf "$bin_dir"
 rm -rf "$build_dir"
 
+echo "mkdir..."
+
 mkdir "$bin_dir"
 mkdir "$build_dir"
 
