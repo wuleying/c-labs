@@ -18,4 +18,6 @@
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
 
+#define LUODB_VERSION "0.0.1"
+
 #endif //LUODB_LUODB_H
