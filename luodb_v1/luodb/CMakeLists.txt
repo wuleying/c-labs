@@ -14,6 +14,8 @@ SET(SOURCE_SRC
         structure/dict.c
         structure/dlist.c
         structure/str.c
+        thirdparty/lzf/lzf_c.c
+        thirdparty/lzf/lzf_d.c
         util/log.c
         util/file.c
         )
