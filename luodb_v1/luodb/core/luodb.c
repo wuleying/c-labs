@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
 
     luoLog(LUO_LOG_NOTICE, "luo_server.fd = %d", luo_server.fd);
 
-    /*
     struct sockaddr_in sa;
     char *ip = luoStrCreate("127.0.0.1", sizeof(sa) + 1);
 
@@ -44,7 +43,6 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Tcp accept failed\n");
         exit(1);
     }
-    */
 
     return 0;
 }
