@@ -10,7 +10,8 @@
 
 #include <luodb/config/config.h>
 
-static int _yesOrNoToInt(char *str) {
+static int
+_yesOrNoToInt(char *str) {
     if (!strcasecmp(str, "yes")) {
         return 1;
     } else if (!strcasecmp(str, "no")) {
@@ -20,6 +21,7 @@ static int _yesOrNoToInt(char *str) {
     }
 }
 
+/* 接口实现 */
 void
 initServerConfig() {
     luo_server.daemonize     = 0;
@@ -62,7 +64,9 @@ loadServerConfig(char *file_name) {
 
         // 守护进程
         if (!strcasecmp(argv[0], "daemonize") && argc == 2) {
-            if((luo_server.daemonize = _yesOrNoToInt(argv[1])) == -1) {
+            luo_server.daemonize = _yesOrNoToInt(argv[1]);
+
+            if (luo_server.daemonize == -1) {
                 err = "Argument must be 'yes' or 'no'";
                 goto _displayError;
             }
@@ -125,5 +129,4 @@ loadServerConfig(char *file_name) {
         fprintf(stderr, "%s\n", err);
         exit(1);
     }
-
 }

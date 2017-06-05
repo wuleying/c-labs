@@ -35,6 +35,7 @@ struct luo_server_s {
 
 struct luo_server_s luo_server;
 
+/* 接口 */
 // 初始化服务端配置(使用默认值)
 void initServerConfig();
 
