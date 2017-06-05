@@ -25,6 +25,7 @@
 
 // 服务端配置
 struct luo_server_s {
+    int  daemonize;             // 是否守护进程
     int  port;                  // 端口
     int  fd;                    // file descriptor
     char *pid_file_path;        // pid 文件路径
