@@ -17,6 +17,7 @@
 
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
+#include <luodb/header/net.h>
 
 // TCP端口
 #define LUO_SERVER_TCP_PORT     10088
@@ -25,12 +26,13 @@
 
 // 服务端配置
 struct luo_server_s {
-    int  daemonize;             // 是否守护进程
-    int  port;                  // 端口
-    int  fd;                    // file descriptor
-    char *pid_file_path;        // pid 文件路径
-    char *log_file_dir;         // 日志文件目录
-    int  log_level;             // 日志级别
+    int  daemonize;                     // 是否守护进程
+    int  port;                          // 端口
+    char net_error[LUO_TCP_ERR_LEN];    // 网络错误信息
+    int  fd;                            // file descriptor
+    char *pid_file_path;                // pid 文件路径
+    char *log_file_dir;                 // 日志文件目录
+    int  log_level;                     // 日志级别
 };
 
 struct luo_server_s luo_server;

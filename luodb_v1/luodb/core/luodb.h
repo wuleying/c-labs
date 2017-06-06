@@ -20,4 +20,7 @@
 
 #define LUODB_VERSION "0.0.1"
 
+/* 宏 */
+#define LUODB_NOT_USED(V) ((void) V)
+
 #endif //LUODB_LUODB_H
