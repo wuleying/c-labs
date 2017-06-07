@@ -23,7 +23,7 @@ luoLog(int level, const char *fmt, ...) {
         luo_str log_file_dir = luoStrCreate("", 1024);
         luo_str log_file = luoStrCreate("", 1024);
 
-        strftime(date_buf, 64, "%G/%m", gmtime(&now));
+        strftime(date_buf, 64, "%G/%m", localtime(&now));
 
         sprintf(log_file_dir, "%s/%s", luo_server.log_file_dir, date_buf);
 
@@ -46,7 +46,7 @@ luoLog(int level, const char *fmt, ...) {
     if (level >= luo_server.log_level) {
         luo_str buf = luoStrCreate("", 64);
 
-        strftime(buf, 64, "%F %H:%M:%S", gmtime(&now));
+        strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
         fprintf(fp, "%s [%s] ", buf, log_level_array[level]);
         vfprintf(fp, fmt, ap);
         fprintf(fp, "\n");
