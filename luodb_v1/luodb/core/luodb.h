@@ -20,6 +20,44 @@
 
 #define LUODB_VERSION "0.0.1"
 
+/* 结构体定义 */
+typedef struct luo_object_s {
+    void *ptr;
+    int  type;
+    int  refcount;
+} luo_object;
+
+typedef struct luo_db_s {
+    luo_dict *dict;
+    luo_dict *expires;
+    int      id;
+} luo_db;
+
+typedef struct luodb_client_s {
+    int        fd;
+    luo_db     *db;
+    int        dict_id;
+    luo_str    query_buf;
+    luo_object **argv;
+    int        argc;
+    int        bulk_len;
+    luo_dlist  *reply;
+    int        sent_len;
+    time_t     last_interaction;
+    int        flags;
+    int        slave_sel_db;
+    int        authenticated;
+    int        repl_state;
+    int        repl_db_fd;
+    long       repl_db_off;
+    off_t      repl_db_size;
+} luodb_client;
+
+struct save_param_s {
+    time_t seconds;
+    int    changes;
+};
+
 /* 宏 */
 #define LUODB_NOT_USED(V) ((void) V)
 

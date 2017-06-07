@@ -23,7 +23,6 @@ _initServer() {
 static void
 _daemonize(void) {
     int  fd;
-    FILE *fp;
 
     if (fork() != 0) {
         exit(0);
@@ -42,12 +41,7 @@ _daemonize(void) {
         }
     }
 
-    fp = fopen(luo_server.pid_file_path, "w");
-
-    if (fp) {
-        fprintf(fp, "%d\n", getpid());
-        fclose(fp);
-    }
+    luoFileSavePid(luo_server.pid_file_path, getpid());
 }
 
 static void
@@ -90,32 +84,11 @@ int main(int argc, char *argv[]) {
         _daemonize();
     }
 
-    // 保存pid
-    pid_t pid = getpid();
-    luoFileSavePid(luo_server.pid_file_path, pid);
-
-    luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, PID:%d, CLI:%s %s", LUODB_VERSION, pid, argv[0], argv[1]);
+    luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, CLI:%s %s", LUODB_VERSION, argv[0], argv[1]);
 
     luo_event_loop *event_loop = luoEventLoopCreate();
 
     luoEventFileCreate(event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL);
-
-    /*
-    char *ser_err = NULL;
-    luo_server.fd = luoTcpServer(ser_err, luo_server.port, NULL);
-
-    luoLog(LUO_LOG_NOTICE, "luo_server.fd = %d", luo_server.fd);
-
-    struct sockaddr_in sa;
-    char *ip = luoStrCreate("127.0.0.1", sizeof(sa) + 1);
-
-    int cfd = luoTcpAccept(ser_err, luo_server.fd, ip, &luo_server.port);
-
-    if(cfd == -1) {
-        fprintf(stderr, "Tcp accept failed\n");
-        exit(1);
-    }
-    */
 
     return 0;
 }
