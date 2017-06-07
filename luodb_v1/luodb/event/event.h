@@ -72,7 +72,7 @@ typedef struct luo_event_loop_s {
 #define LUO_NOT_USED(V)         ((void) V)
 
 /* 接口 */
-luo_event_loop *luoEventLoopCreate(void);
+luo_event_loop * luoEventLoopCreate(void);
 
 void luoEventLoopDelete(luo_event_loop *event_loop);
 

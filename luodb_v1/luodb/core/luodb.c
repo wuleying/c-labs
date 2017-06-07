@@ -18,11 +18,13 @@ _initServer() {
     signal(SIGHUP, SIG_IGN);
     // 忽略SIGPIPE信号
     signal(SIGPIPE, SIG_IGN);
+
+    luo_server.event_loop = luoEventLoopCreate();
 }
 
 static void
 _daemonize(void) {
-    int  fd;
+    int fd;
 
     if (fork() != 0) {
         exit(0);
@@ -86,9 +88,11 @@ int main(int argc, char *argv[]) {
 
     luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, CLI:%s %s", LUODB_VERSION, argv[0], argv[1]);
 
-    luo_event_loop *event_loop = luoEventLoopCreate();
+    luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL);
 
-    luoEventFileCreate(event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL);
+    luoEventMain(luo_server.event_loop);
+
+    luoEventLoopDelete(luo_server.event_loop);
 
     return 0;
 }
