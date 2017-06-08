@@ -58,11 +58,10 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
 
     client_fd = luoTcpAccept(luo_server.net_error, fd, client_ip, &client_port);
 
-    luoLog(LUO_LOG_DEUBG, "client_fd = %d", client_fd);
-
     if (client_fd == LUO_TCP_ERR) {
         return;
     }
+
     luoLog(LUO_LOG_DEUBG, "Accepted %s:%d", client_ip, client_port);
 }
 
