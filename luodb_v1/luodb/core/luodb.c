@@ -58,8 +58,9 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
 
     client_fd = luoTcpAccept(luo_server.net_error, fd, client_ip, &client_port);
 
+    luoLog(LUO_LOG_DEUBG, "client_fd = %d", client_fd);
+
     if (client_fd == LUO_TCP_ERR) {
-        luoLog(LUO_LOG_DEUBG, "Accepting client connection: %s", luo_server.net_error);
         return;
     }
     luoLog(LUO_LOG_DEUBG, "Accepted %s:%d", client_ip, client_port);
@@ -88,7 +89,13 @@ int main(int argc, char *argv[]) {
 
     luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, CLI:%s %s", LUODB_VERSION, argv[0], argv[1]);
 
-    luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL);
+    if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
+        LUO_EVENT_ERR) {
+        fprintf(stderr, "Create file event: Out of memory\n");
+        fflush(stderr);
+        sleep(1);
+        abort();
+    }
 
     luoEventMain(luo_server.event_loop);
 

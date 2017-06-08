@@ -55,7 +55,7 @@ typedef struct luo_event_loop_s {
 
 /* 常量 */
 #define LUO_EVENT_OK            0
-#define LUO_EVENT_ERR           1
+#define LUO_EVENT_ERR           -1
 
 #define LUO_EVENT_READABLE      1
 #define LUO_EVENT_WRITABLE      2
