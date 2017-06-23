@@ -20,6 +20,11 @@ _initServer() {
     signal(SIGPIPE, SIG_IGN);
 
     luo_server.event_loop = luoEventLoopCreate();
+
+    if (luo_server.fd == -1) {
+        luoLog(LUO_LOG_WARNING, "Opening TCP port: %s", luo_server.net_error);
+        exit(1);
+    }
 }
 
 static void
