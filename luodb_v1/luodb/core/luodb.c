@@ -19,7 +19,7 @@ _initServer() {
     // 忽略SIGPIPE信号
     signal(SIGPIPE, SIG_IGN);
 
-    //luo_server.event_loop = luoEventLoopCreate();
+    luo_server.event_loop = luoEventLoopCreate();
 
     luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
 
@@ -95,12 +95,6 @@ int main(int argc, char *argv[]) {
 
     luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, CLI:%s %s", LUODB_VERSION, argv[0], argv[1]);
 
-    char *client_ip  = "127.0.0.1";
-    int  client_port = 20088;
-
-    int client_fd = luoTcpAccept(luo_server.net_error, luo_server.fd, client_ip, &client_port);
-
-    /*
     if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {
         fprintf(stderr, "Create file event: Out of memory\n");
@@ -112,7 +106,6 @@ int main(int argc, char *argv[]) {
     luoEventMain(luo_server.event_loop);
 
     luoEventLoopDelete(luo_server.event_loop);
-    */
 
     return 0;
 }

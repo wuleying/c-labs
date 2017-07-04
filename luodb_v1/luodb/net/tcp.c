@@ -206,7 +206,7 @@ luoTcpAccept(char *err, int server_sock, char *ip, int *port) {
     while (1) {
         sa_len = sizeof(sa);
 
-        fd = (accept(server_sock, (struct sockaddr *) &sa, &sa_len));
+        fd = accept(server_sock, (struct sockaddr *) &sa, &sa_len);
 
         if (fd == -1) {
             if (errno == EINTR) {
