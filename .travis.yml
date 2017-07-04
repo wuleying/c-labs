@@ -14,4 +14,5 @@ addons:
       - cmake
 
 script:
-  - ./luodb_v1/shell/cmake.sh
+  - cd ./luodb_v1
+  - ./shell/cmake.sh
