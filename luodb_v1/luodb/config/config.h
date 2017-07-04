@@ -28,6 +28,7 @@
 // 服务端配置
 struct luo_server_s {
     int            daemonize;                     // 是否守护进程
+    char           *bind_addr;                    // 绑定地址
     int            port;                          // 端口
     char           net_error[LUO_TCP_ERR_LEN];    // 网络错误信息
     int            fd;                            // file descriptor
