@@ -104,6 +104,14 @@ luoEventAddMilliSecondsToNow(long long milli_seconds, long *sec, long *ms) {
 
     when_sec = cur_sec + milli_seconds / 1000;
     when_ms  = cur_ms + milli_seconds % 1000;
+
+    while (when_ms >= 1000) {
+        when_sec++;
+        when_ms -= 1000;
+    }
+
+    *sec = when_sec;
+    *ms  = when_ms;
 }
 
 long long
