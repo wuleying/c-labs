@@ -271,18 +271,22 @@ luoStrRange(luo_str ls, long start, long end) {
 
 void
 luoStrToLower(luo_str ls) {
+    int i;
+
     long len = luoStrLen(ls);
 
-    for (int i = 0; i < len; ++i) {
+    for (i = 0; i < len; ++i) {
         ls[i] = (char) tolower(ls[i]);
     }
 }
 
 void
 luoStrToUpper(luo_str ls) {
+    int i;
+
     long len = luoStrLen(ls);
 
-    for (int i = 0; i < len; ++i) {
+    for (i = 0; i < len; ++i) {
         ls[i] = (char) toupper(ls[i]);
     }
 }
@@ -311,6 +315,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
     int elements = 0;
     int slots    = 5;
     int start    = 0;
+    int i;
 
     luo_str *tokens = luoMalloc(sizeof(luo_str) * slots);
 
@@ -318,7 +323,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
         return NULL;
     }
 
-    for (int i = 0; i < (len - (sep_len - 1)); ++i) {
+    for (i = 0; i < (len - (sep_len - 1)); ++i) {
         if (slots < elements + 2) {
             luo_str *new_tokens;
 
@@ -361,12 +366,14 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
 
     _cleanup:
     {
-        for (int i = 0; i < elements; ++i) {
-            luoFree(tokens[i]);
+        int j;
+
+        for (j = 0; j < elements; ++j) {
+            luoFree(tokens[j]);
         }
 
         luoFree(tokens);
         return NULL;
-    };
+    }
 }
 
