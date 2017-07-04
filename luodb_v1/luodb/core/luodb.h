@@ -18,6 +18,8 @@
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
 
+#include <signal.h>
+
 #define LUODB_VERSION "0.0.1"
 
 /* 结构体定义 */
