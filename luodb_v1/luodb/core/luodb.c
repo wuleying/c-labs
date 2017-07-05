@@ -23,6 +23,8 @@ _initServer() {
 
     luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
 
+    luoLog(LUO_LOG_DEUBG, "Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
+
     if (luo_server.fd == -1) {
         luoLog(LUO_LOG_WARNING, "Opening TCP port: %s", luo_server.net_error);
         exit(1);

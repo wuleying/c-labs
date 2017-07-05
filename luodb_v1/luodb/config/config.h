@@ -21,7 +21,7 @@
 #include <luodb/event/event.h>
 
 // TCP端口
-#define LUO_SERVER_TCP_PORT     10088
+#define LUO_SERVER_TCP_PORT     20088
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024
 
