@@ -12,8 +12,6 @@
 
 static void
 _initServer() {
-    int j;
-
     // 忽略SIGINT信号
     signal(SIGHUP, SIG_IGN);
     // 忽略SIGPIPE信号
