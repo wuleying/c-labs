@@ -23,7 +23,7 @@ luoLog(int level, const char *fmt, ...) {
         luo_str log_file_dir = luoStrCreate("", 1024);
         luo_str log_file = luoStrCreate("", 1024);
 
-        strftime(date_buf, 64, "%G/%m", localtime(&now));
+        strftime(date_buf, 64, "%G/%m/%d", localtime(&now));
 
         sprintf(log_file_dir, "%s/%s", luo_server.log_file_dir, date_buf);
 
