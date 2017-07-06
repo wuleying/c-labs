@@ -7,7 +7,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 SET(SOURCE_SRC
         config/config.c
-        core/luodb.c
+        core/luodb-server.c
         event/event.c
         event/event_epoll.c
         event/event_kqueue.c
@@ -23,4 +23,17 @@ SET(SOURCE_SRC
         util/file.c
         )
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_SRC})
+
+SET(CLI_SOURCE_SRC
+        core/luodb-client.c
+        memory/mem.c
+        net/tcp.c
+        structure/dlist.c
+        structure/str.c
+        util/log.c
+        util/file.c
+)
+
+ADD_EXECUTABLE(${PROJECT_NAME}-server ${SOURCE_SRC})
+
+ADD_EXECUTABLE(${PROJECT_NAME}-client ${CLI_SOURCE_SRC})

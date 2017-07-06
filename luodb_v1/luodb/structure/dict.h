@@ -27,9 +27,9 @@ typedef struct luo_dict_entry_s {
 typedef struct luo_dict_type_s {
     unsigned int (*hashFunction)(const void *key);
 
-    void *(*key_dup)(void *priv_data, const void *key);
+    void         *(*key_dup)(void *priv_data, const void *key);
 
-    void *(*val_dup)(void *priv_data, const void *object);
+    void         *(*val_dup)(void *priv_data, const void *object);
 
     int          (*key_compare)(void *priv_data, const void *key1, const void *key2);
 
