@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-bin/luodb-server conf/luodb.conf &
+bin/luodb-server conf/luodb.conf
