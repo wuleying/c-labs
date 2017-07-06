@@ -5,7 +5,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 设置编译选项
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
 
-SET(SOURCE_SRC
+SET(LUODB_SERVER_SOURCE_SRC
         config/config.c
         core/luodb-server.c
         event/event.c
@@ -24,7 +24,7 @@ SET(SOURCE_SRC
         )
 
 
-SET(CLI_SOURCE_SRC
+SET(LUODB_CLIENT_SOURCE_SRC
         core/luodb-client.c
         memory/mem.c
         net/tcp.c
@@ -34,6 +34,5 @@ SET(CLI_SOURCE_SRC
         util/file.c
 )
 
-ADD_EXECUTABLE(${PROJECT_NAME}-server ${SOURCE_SRC})
-
-ADD_EXECUTABLE(${PROJECT_NAME}-client ${CLI_SOURCE_SRC})
+ADD_EXECUTABLE(${PROJECT_NAME}-server ${LUODB_SERVER_SOURCE_SRC})
+ADD_EXECUTABLE(${PROJECT_NAME}-client ${LUODB_CLIENT_SOURCE_SRC})

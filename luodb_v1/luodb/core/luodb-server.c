@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
         _daemonize();
     }
 
-    luoLog(LUO_LOG_DEUBG, "Luodb start success. VERSION:%s, CLI:%s %s", LUODB_VERSION, argv[0], argv[1]);
+    luoLog(LUO_LOG_DEUBG, "Luodb start success. Version: %s, Command: %s %s", LUODB_VERSION, argv[0], argv[1]);
 
     if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {

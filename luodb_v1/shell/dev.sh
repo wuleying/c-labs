@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 pwd;
-shell/stop.sh
+shell/luodb-server-stop.sh
 shell/cmake.sh
-shell/start.sh
+shell/luodb-server-start.sh
