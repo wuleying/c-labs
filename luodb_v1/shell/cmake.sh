@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 project_name="luodb"
+server_name="$project_name"-server
+client_name="$project_name"-client
 
 root_dir=$(cd "$(dirname "$1")" || exit; pwd)
 echo "root_dir:     $root_dir"
@@ -30,9 +32,14 @@ cmake ..
 echo "make"
 make
 
-if [[ -f "$bin_dir"/"$project_name" ]]; then
-    strip "$bin_dir"/"$project_name"
-    chmod +x "$bin_dir"/"$project_name"
+if [[ -f "$bin_dir"/"$server_name" ]]; then
+    strip "$bin_dir"/"$server_name"
+    chmod +x "$bin_dir"/"$server_name"
+fi
+
+if [[ -f "$bin_dir"/"$client_name" ]]; then
+    strip "$bin_dir"/"$client_name"
+    chmod +x "$bin_dir"/"$client_name"
 fi
 
 echo "cmake done."
