@@ -20,7 +20,9 @@
 #include <luodb/header/net.h>
 #include <luodb/event/event.h>
 
-// TCP端口
+// 默认IP
+#define LUO_SERVER_TCP_IP       "127.0.0.1"
+// 默认TCP端口
 #define LUO_SERVER_TCP_PORT     20088
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024

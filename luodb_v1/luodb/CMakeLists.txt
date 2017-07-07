@@ -25,6 +25,7 @@ SET(LUODB_SERVER_SOURCE_SRC
 
 
 SET(LUODB_CLIENT_SOURCE_SRC
+        config/config.c
         core/luodb-client.c
         memory/mem.c
         net/tcp.c
