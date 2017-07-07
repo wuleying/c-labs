@@ -25,7 +25,7 @@ _yesOrNoToInt(char *str) {
 void
 initServerConfig() {
     luo_server.daemonize     = 0;
-    luo_server.bind_addr     = LUO_SERVER_TCP_IP;
+    luo_server.bind_addr     = luoStrNew(LUO_SERVER_TCP_IP);
     luo_server.port          = LUO_SERVER_TCP_PORT;
     luo_server.pid_file_path = NULL;
     luo_server.log_file_dir  = NULL;
