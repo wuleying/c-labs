@@ -35,7 +35,7 @@ typedef struct luo_db_s {
     int      id;
 } luo_db;
 
-typedef struct luodb_client_s {
+typedef struct luo_client_s {
     int        fd;
     luo_db     *db;
     int        dict_id;
@@ -59,8 +59,5 @@ struct save_param_s {
     time_t seconds;
     int    changes;
 };
-
-/* 宏 */
-#define LUODB_NOT_USED(V) ((void) V)
 
 #endif //LUODB_LUODB_H

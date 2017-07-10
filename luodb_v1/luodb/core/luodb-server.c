@@ -59,9 +59,9 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
     int  client_fd;
     char client_ip[128];
 
-    LUODB_NOT_USED(event_loop);
-    LUODB_NOT_USED(priv_data);
-    LUODB_NOT_USED(mask);
+    LUO_NOT_USED(event_loop);
+    LUO_NOT_USED(priv_data);
+    LUO_NOT_USED(mask);
 
     client_fd = luoTcpAccept(luo_server.net_error, fd, client_ip, &client_port);
 

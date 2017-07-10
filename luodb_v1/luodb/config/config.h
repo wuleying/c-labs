@@ -27,6 +27,9 @@
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024
 
+/* 宏 */
+#define LUO_NOT_USED(V)  ((void) V)
+
 // 服务端配置
 struct luo_server_s {
     int            daemonize;                     // 是否守护进程

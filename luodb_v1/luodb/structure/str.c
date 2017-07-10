@@ -48,7 +48,7 @@ luoStrEmpty() {
     return luoStrCreate("", 0);
 }
 
-long
+int
 luoStrLen(const luo_str ls) {
     struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);
     return lss->len;
