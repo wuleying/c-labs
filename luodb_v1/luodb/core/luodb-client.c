@@ -15,15 +15,15 @@ _luoClientParseOptions(int argc, char **argv) {
             char *ip = luoMalloc(32);
 
             if (luoTcpResolve(NULL, argv[i + 1], ip) == LUO_TCP_ERR) {
-                printf("Can't resolve %s\n", argv[i]);
+                luoLog(LUO_LOG_ERROR, "Can't resolve %s\n", argv[i]);
                 exit(1);
             }
 
             luo_client_config.host_ip = ip;
-            i--;
+            i++;
         } else if (!strcmp(argv[i], "-p") && !last_arg) {
             luo_client_config.host_port = atoi(argv[i + 1]);
-            i--;
+            i++;
         } else {
             break;
         }
@@ -59,7 +59,6 @@ _luoClientReadArgFromStdin(void) {
         if (nread == 0) {
             break;
         } else if (nread == -1) {
-            fprintf(stderr, "Reading from standard input");
             luoLog(LUO_LOG_ERROR, "Reading from standard input");
             exit(1);
         }
@@ -77,9 +76,10 @@ _luoClientConnect() {
 
     fd = luoTcpConnect(err, luo_client_config.host_ip, luo_client_config.host_port);
 
+    luoLog(LUO_LOG_DEUBG, "host_ip = %s, host_port = %d", luo_client_config.host_ip, luo_client_config.host_port);
+
     if (fd == LUO_TCP_ERR) {
-        fprintf(stderr, "Connect: %s\n", err);
-        luoLog(LUO_LOG_ERROR, "Connect: %s\n", err);
+        luoLog(LUO_LOG_ERROR, "%s", err);
         return -1;
     }
 
@@ -139,7 +139,7 @@ _luoClientReadBulkReply(int fd) {
 
     if (bulk_len == -1) {
         luoStrFree(reply_len);
-        printf("Nil.\n");
+        luoLog(LUO_LOG_ERROR, "Is nil.");
         return LUO_CLIENT_ERR;
     }
 
@@ -177,12 +177,12 @@ _luoClientReadMultiBulkReply(int fd) {
 
     if (elements == -1) {
         luoStrFree(reply_len);
-        printf("Nil.\n");
+        luoLog(LUO_LOG_ERROR, "Is nil.");
         return LUO_CLIENT_ERR;
     }
 
     if (elements == 0) {
-        printf("Empty list or set.\n");
+        luoLog(LUO_LOG_NOTICE, "Empty list or set.");
     }
 
     while (elements--) {
@@ -206,8 +206,7 @@ _luoClientReadReply(int fd) {
 
     switch (type) {
         case '-':
-            printf("Error: ");
-            _luoClientReadSingleLineReply(fd);
+            luoLog(LUO_LOG_ERROR, "Error: %s", _luoClientReadSingleLineReply(fd));
             return LUO_CLIENT_ERR;
         case '+':
         case ':':
@@ -217,7 +216,7 @@ _luoClientReadReply(int fd) {
         case '*':
             return _luoClientReadMultiBulkReply(fd);
         default:
-            printf("Pootocol error, got '%c' as reply type byte.\n", type);
+            luoLog(LUO_LOG_ERROR, "Pootocol error, got '%c' as reply type byte.", type);
             return LUO_CLIENT_ERR;
     }
 }
@@ -234,15 +233,13 @@ _luoClinetSendCommand(int argc, char **argv) {
     luo_command = _luoClientLookupCommand(argv[0]);
 
     if (!luo_command) {
-        fprintf(stderr, "Unknow command '%s'\n", argv[0]);
-        luoLog(LUO_LOG_ERROR, "Unknow command '%s'\n", argv[0]);
+        luoLog(LUO_LOG_ERROR, "Unknow command '%s'", argv[0]);
         return LUO_CLIENT_ERR;
     }
 
     if ((luo_command->arity > 0 && argc != luo_command->arity) ||
         (luo_command->arity < 0 && argc < -luo_command->arity)) {
-        fprintf(stderr, "Wrong number of arguments for '%s'\n", luo_command->name);
-        luoLog(LUO_LOG_ERROR, "Wrong number of arguments for '%s'\n", luo_command->name);
+        luoLog(LUO_LOG_ERROR, "Wrong number of arguments for '%s'", luo_command->name);
         return LUO_CLIENT_ERR;
     }
 
@@ -300,8 +297,6 @@ main(int argc, char **argv) {
     argc -= first_arg;
     argv += first_arg;
 
-    luoLog(LUO_LOG_DEUBG, "first_arg = %d, avgc = %d, argv = %d", first_arg, argc, argv);
-
     argv_copy = luoMalloc(sizeof(char *) * argc + 1);
 
     for (i = 0; i < argc; ++i) {
@@ -309,11 +304,9 @@ main(int argc, char **argv) {
     }
 
     if (argc < 1) {
-        fprintf(stderr, "Usage: luodb-client [-h host] [-p port] cmd arg1 arg2 arg3 ... argN\n");
+        luoLog(LUO_LOG_ERROR, "Usage: luodb-client [-h host] [-p port] cmd arg1 arg2 arg3 ... argN");
         exit(1);
     }
-
-    luoLog(LUO_LOG_DEUBG, "host_ip = %s, host_port = %d", luo_client_config.host_ip, luo_client_config.host_port);
 
     luo_command = _luoClientLookupCommand(argv[0]);
 
