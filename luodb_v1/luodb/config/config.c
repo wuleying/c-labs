@@ -30,6 +30,7 @@ initServerConfig() {
     luo_server.pid_file_path = NULL;
     luo_server.log_file_dir  = NULL;
     luo_server.log_level     = LUO_LOG_DEUBG;
+    luo_server.event_loop    = NULL;
 }
 
 void

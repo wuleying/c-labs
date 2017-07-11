@@ -15,15 +15,12 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include <luodb/header/structure.h>
-#include <luodb/header/util.h>
-#include <luodb/header/net.h>
+#include <luodb/common/constant.h>
+#include <luodb/net/tcp.h>
 #include <luodb/event/event.h>
+#include <luodb/structure/str.h>
+#include <luodb/util/log.h>
 
-// 默认IP
-#define LUO_SERVER_TCP_IP       "127.0.0.1"
-// 默认TCP端口
-#define LUO_SERVER_TCP_PORT     20088
 // 配置文件行最大字节
 #define LUO_CONFIG_LINE_MAX     1024
 
