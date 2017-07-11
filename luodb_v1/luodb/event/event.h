@@ -11,6 +11,7 @@
 #ifndef LUODB_EVENT_H
 #define LUODB_EVENT_H
 
+#include <luodb/common/macro.h>
 #include <luodb/memory/mem.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -68,11 +69,8 @@ typedef struct luo_event_loop_s {
 
 #define LUO_EVENT_NOMORE        -1
 
-/* 宏定义 */
-#define LUO_EVENT_NOT_USED(V)   ((void) V)
-
 /* 接口 */
-luo_event_loop * luoEventLoopCreate(void);
+luo_event_loop *luoEventLoopCreate(void);
 
 void luoEventLoopDelete(luo_event_loop *event_loop);
 

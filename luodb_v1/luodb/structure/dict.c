@@ -513,7 +513,7 @@ _luoDictStringCopyDictKeyDup(void *priv_data, const void *key) {
     size_t len   = strlen(key);
     char   *copy = _luoDictAlloc(len + 1);
 
-    LUO_DICT_NOT_USED(priv_data);
+    LUO_NOT_USED(priv_data);
 
     memcpy(copy, key, len);
     copy[len] = '\0';
@@ -526,7 +526,7 @@ _luoDictStringKeyValCopyDictValDup(void *priv_data, const void *val) {
     size_t len   = strlen(val);
     char   *copy = _luoDictAlloc(len + 1);
 
-    LUO_DICT_NOT_USED(priv_data);
+    LUO_NOT_USED(priv_data);
 
     memcpy(copy, val, len);
     copy[len] = '\0';
@@ -536,21 +536,21 @@ _luoDictStringKeyValCopyDictValDup(void *priv_data, const void *val) {
 
 static int
 _luoDictStringCopyDictKeyCompare(void *priv_data, const void *key1, const void *key2) {
-    LUO_DICT_NOT_USED(priv_data);
+    LUO_NOT_USED(priv_data);
 
     return strcmp(key1, key2) == 0;
 }
 
 static void
 _luoDictStringCopyDictKeyDestructor(void *priv_data, void *key) {
-    LUO_DICT_NOT_USED(priv_data);
+    LUO_NOT_USED(priv_data);
 
     _luoDictFree((void *) key);
 }
 
 static void
 _luoDictStringKeyValCopyDictValDestructor(void *priv_data, void *val) {
-    LUO_DICT_NOT_USED(priv_data);
+    LUO_NOT_USED(priv_data);
 
     _luoDictFree((void *) val);
 }

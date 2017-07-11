@@ -8,9 +8,10 @@
 // Created by luoliang1 on 2017/5/6.
 //
 
-#ifndef LUODB_LUODB_H
-#define LUODB_LUODB_H
+#ifndef LUODB_SERVER_H
+#define LUODB_SERVER_H
 
+#include <luodb/header/common.h>
 #include <luodb/header/config.h>
 #include <luodb/header/event.h>
 #include <luodb/header/memory.h>
@@ -19,8 +20,6 @@
 #include <luodb/header/util.h>
 
 #include <signal.h>
-
-#define LUODB_VERSION "0.0.1"
 
 /* 结构体定义 */
 typedef struct luo_object_s {
@@ -60,4 +59,4 @@ struct save_param_s {
     int    changes;
 };
 
-#endif //LUODB_LUODB_H
+#endif //LUODB_SERVER_H

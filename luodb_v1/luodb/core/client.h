@@ -2,16 +2,14 @@
 // Created by luoliang1 on 2017/7/6.
 //
 
-#ifndef LUODB_LUODB_CLI_H
-#define LUODB_LUODB_CLI_H
+#ifndef LUODB_CLIENT_H
+#define LUODB_CLIENT_H
 
+#include <luodb/common/constant.h>
 #include <luodb/config/config.h>
 #include <luodb/structure/str.h>
 #include <luodb/util/file.h>
 #include <luodb/util/log.h>
-
-#define LUO_CMD_INLINE            1
-#define LUO_CMD_BULK              2
 
 #define LUO_CLIENT_OK             0
 #define LUO_CLIENT_ERR            1
@@ -33,4 +31,4 @@ static struct luo_command_s cmd_table[] = {
         {NULL,  0, 0}
 };
 
-#endif //LUODB_LUODB_CLI_H
+#endif //LUODB_CLIENT_H

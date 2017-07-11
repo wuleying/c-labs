@@ -11,9 +11,11 @@
 #ifndef LUODB_DICT_H
 #define LUODB_DICT_H
 
+#include <luodb/common/macro.h>
+#include <luodb/memory/mem.h>
+
 #include <stdarg.h>
 #include <stdio.h>
-#include <luodb/memory/mem.h>
 #include <assert.h>
 #include <limits.h>
 
@@ -61,9 +63,6 @@ typedef struct luo_dict_iterator_s {
 #define LUO_DICT_INITIAL_SIZE   16
 
 #define LUO_DICT_STATS_VECTLEN  50
-
-/* 宏定义 */
-#define LUO_DICT_NOT_USED(V) ((void) V)
 
 #define LUO_DICT_FREE_ENTRY_VAL(dict, entry)                            \
     if((dict)->type->val_destructor)                                    \

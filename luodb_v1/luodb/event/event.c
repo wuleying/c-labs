@@ -197,7 +197,7 @@ luoEventProcessEvents(luo_event_loop *event_loop, int flags) {
     luo_file_event *file_event = event_loop->file_event_head;
     luo_time_event *time_event;
 
-    LUO_EVENT_NOT_USED(flags);
+    LUO_NOT_USED(flags);
 
     if (!(flags & LUO_EVENT_TIME_EVENTS) && !(flags & LUO_EVENT_FILE_EVENTS)) {
         return 0;
