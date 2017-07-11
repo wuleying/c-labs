@@ -11,11 +11,12 @@
 #ifndef LUODB_EVENT_H
 #define LUODB_EVENT_H
 
-#include <luodb/common/macro.h>
-#include <luodb/memory/mem.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <luodb/common/macro.h>
+#include <luodb/memory/mem.h>
 
 struct luo_event_loop_s;
 

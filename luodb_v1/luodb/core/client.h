@@ -5,14 +5,10 @@
 #ifndef LUODB_CLIENT_H
 #define LUODB_CLIENT_H
 
-#include <luodb/common/constant.h>
-#include <luodb/config/config.h>
-#include <luodb/structure/str.h>
-#include <luodb/util/file.h>
-#include <luodb/util/log.h>
-
-#define LUO_CLIENT_OK             0
-#define LUO_CLIENT_ERR            1
+#include <luodb/header/common.h>
+#include <luodb/header/config.h>
+#include <luodb/header/structure.h>
+#include <luodb/header/util.h>
 
 static struct luo_client_config_s {
     char *host_ip;

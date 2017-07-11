@@ -11,13 +11,13 @@
 #ifndef LUODB_DICT_H
 #define LUODB_DICT_H
 
-#include <luodb/common/macro.h>
-#include <luodb/memory/mem.h>
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
 #include <limits.h>
+
+#include <luodb/common/macro.h>
+#include <luodb/memory/mem.h>
 
 /* 结构体 */
 typedef struct luo_dict_entry_s {

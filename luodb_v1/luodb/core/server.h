@@ -11,6 +11,8 @@
 #ifndef LUODB_SERVER_H
 #define LUODB_SERVER_H
 
+#include <signal.h>
+
 #include <luodb/header/common.h>
 #include <luodb/header/config.h>
 #include <luodb/header/event.h>
@@ -18,8 +20,6 @@
 #include <luodb/header/net.h>
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
-
-#include <signal.h>
 
 /* 结构体定义 */
 typedef struct luo_object_s {
