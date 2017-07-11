@@ -24,7 +24,7 @@ _initServer() {
     luoLog(LUO_LOG_DEUBG, "Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
 
     if (luo_server.fd == -1) {
-        luoLog(LUO_LOG_WARNING, "Opening TCP port: %s", luo_server.net_error);
+        luoLog(LUO_LOG_ERROR, "Opening TCP port, %s", luo_server.net_error);
         exit(1);
     }
 }
