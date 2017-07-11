@@ -107,7 +107,7 @@ loadServerConfig(char *file_name) {
             } else if (!strcasecmp(argv[1], "warning")) {
                 luo_server.log_level = LUO_LOG_WARNING;
             } else {
-                err = "Invaild log level. Must be one of debug, notice, warning.";
+                err = "Invaild log level. Must be one of debug, notice, warning, error.";
                 goto _displayError;
             }
         }

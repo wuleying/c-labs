@@ -204,6 +204,8 @@ _luoClientReadReply(int fd) {
         exit(1);
     }
 
+    luoLog(LUO_LOG_DEUBG, "type = %c", type);
+
     switch (type) {
         case '-':
             luoLog(LUO_LOG_ERROR, "Error: %s", _luoClientReadSingleLineReply(fd));
@@ -267,6 +269,8 @@ _luoClinetSendCommand(int argc, char **argv) {
         cmd = luoStrCatLen(cmd, argv[argc - 1], luoStrLen(argv[argc - 1]));
         cmd = luoStrCat(cmd, "\r\n");
     }
+
+    luoLog(LUO_LOG_DEUBG, "cmd = %s", cmd);
 
     luoTcpWrite(fd, cmd, luoStrLen(cmd));
 

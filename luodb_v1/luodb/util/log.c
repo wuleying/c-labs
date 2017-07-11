@@ -12,6 +12,10 @@
 
 void
 luoLog(int level, const char *fmt, ...) {
+    if (level < luo_server.log_level) {
+        return;
+    }
+
     va_list ap;
     FILE    *fp;
     time_t  now = time(NULL);
@@ -19,9 +23,9 @@ luoLog(int level, const char *fmt, ...) {
     if (luo_server.log_file_dir == NULL) {
         fp = stdout;
     } else {
-        luo_str date_buf = luoStrCreate("", 64);
+        luo_str date_buf     = luoStrCreate("", 64);
         luo_str log_file_dir = luoStrCreate("", 1024);
-        luo_str log_file = luoStrCreate("", 1024);
+        luo_str log_file     = luoStrCreate("", 1024);
 
         strftime(date_buf, 64, "%G/%m/%d", localtime(&now));
 
@@ -43,17 +47,15 @@ luoLog(int level, const char *fmt, ...) {
     }
 
     va_start(ap, fmt);
-    if (level >= luo_server.log_level) {
-        luo_str buf = luoStrCreate("", 64);
+    luo_str buf = luoStrCreate("", 64);
 
-        strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
-        fprintf(fp, "%s [%s] ", buf, log_level_array[level]);
-        vfprintf(fp, fmt, ap);
-        fprintf(fp, "\n");
-        fflush(fp);
+    strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
+    fprintf(fp, "%s [%s] ", buf, log_level_array[level]);
+    vfprintf(fp, fmt, ap);
+    fprintf(fp, "\n");
+    fflush(fp);
 
-        luoStrFree(buf);
-    }
+    luoStrFree(buf);
     va_end(ap);
 
     if (luo_server.log_file_dir) {
