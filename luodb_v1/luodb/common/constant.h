@@ -2,11 +2,11 @@
 // Created by luoliang1 on 2017/7/11.
 //
 
-#ifndef LUODB_CONSTANT_H
-#define LUODB_CONSTANT_H
+#ifndef LUODB_COMMON_CONSTANT_H
+#define LUODB_COMMON_CONSTANT_H
 
 // 系统版本
-#define LUODB_VERSION "0.0.1"
+#define LUO_VERSION         "0.0.1"
 
 // 函数返回状态
 #define LUO_RETURN_OK       0
@@ -21,4 +21,4 @@
 // 默认TCP端口
 #define LUO_SERVER_TCP_PORT 20088
 
-#endif //LUODB_CONSTANT_H
+#endif //LUODB_COMMON_CONSTANT_H

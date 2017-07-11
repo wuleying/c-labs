@@ -13,6 +13,8 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
 
 void *luoMalloc(size_t size);
 
@@ -21,6 +23,8 @@ void *luoRealloc(void *ptr, size_t size);
 void luoFree(void *ptr);
 
 char *luoStrdup(const char *s);
+
+void luoOom(const char *msg);
 
 size_t luoMallocUsedMemory(void);
 

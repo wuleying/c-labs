@@ -72,6 +72,39 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
     luoLog(LUO_LOG_DEUBG, "Accepted %s:%d", client_ip, client_port);
 }
 
+static luo_client *
+createClient(int fd) {
+    luo_client *client = luoMalloc(sizeof(luo_client));
+
+    luoTcpNonBlock(NULL, fd);
+    luoTcpNoDelay(NULL, fd);
+
+    if (!client) {
+        return NULL;
+    }
+
+    // todo selectDB(client, 0);
+
+    client->fd               = fd;
+    client->query_buf        = luoStrEmpty();
+    client->argc             = 0;
+    client->argv             = NULL;
+    client->bulk_len         = 0;
+    client->sent_len         = 0;
+    client->flags            = 0;
+    client->last_interaction = time(NULL);
+    client->authenticated    = 0;
+    client->repl_state       = LUO_REPL_NONE;
+
+    if((client->reply = luoDListCreate()) == NULL) {
+        luoOom("List create");
+    }
+
+    // todo set free/dup mothod
+
+    return client;
+}
+
 int main(int argc, char *argv[]) {
     // 初始化服务端配置
     initServerConfig();
@@ -93,7 +126,7 @@ int main(int argc, char *argv[]) {
         _daemonize();
     }
 
-    luoLog(LUO_LOG_DEUBG, "Luodb start success. Version: %s, Command: %s %s", LUODB_VERSION, argv[0], argv[1]);
+    luoLog(LUO_LOG_DEUBG, "Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
 
     if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {

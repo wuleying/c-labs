@@ -2,8 +2,8 @@
 // Created by luoliang1 on 2017/7/6.
 //
 
-#ifndef LUODB_CLIENT_H
-#define LUODB_CLIENT_H
+#ifndef LUODB_CLI_H
+#define LUODB_CLI_H
 
 #include <luodb/header/common.h>
 #include <luodb/header/config.h>
@@ -27,4 +27,4 @@ static struct luo_command_s cmd_table[] = {
         {NULL,  0, 0}
 };
 
-#endif //LUODB_CLIENT_H
+#endif //LUODB_CLI_H

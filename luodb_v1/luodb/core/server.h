@@ -21,6 +21,11 @@
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
 
+/* 常量 */
+#define LUO_REPL_NONE           0
+#define LUO_REPL_CONNECT        1
+#define LUO_REPL_CONNECTED      2
+
 /* 结构体定义 */
 typedef struct luo_object_s {
     void *ptr;
@@ -52,7 +57,7 @@ typedef struct luo_client_s {
     int        repl_db_fd;
     long       repl_db_off;
     off_t      repl_db_size;
-} luodb_client;
+} luo_client;
 
 struct save_param_s {
     time_t seconds;

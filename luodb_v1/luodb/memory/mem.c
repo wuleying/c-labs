@@ -82,6 +82,15 @@ luoStrdup(const char *str) {
     return ptr;
 }
 
+// 内存溢出
+void
+luoOom(const char *msg) {
+    fprintf(stderr, "%s: Out of memory\n", msg);
+    fflush(stderr);
+    sleep(1);
+    abort();
+}
+
 // 返回已使用内存大小
 size_t
 luoMallocUsedMemory(void) {

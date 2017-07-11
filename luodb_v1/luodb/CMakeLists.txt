@@ -24,9 +24,9 @@ SET(LUODB_SERVER_SOURCE_SRC
         )
 
 
-SET(LUODB_CLIENT_SOURCE_SRC
+SET(LUODB_CLI_SOURCE_SRC
         config/config.c
-        core/client.c
+        core/cli.c
         memory/mem.c
         net/tcp.c
         structure/dlist.c
@@ -36,4 +36,4 @@ SET(LUODB_CLIENT_SOURCE_SRC
 )
 
 ADD_EXECUTABLE(${PROJECT_NAME}-server ${LUODB_SERVER_SOURCE_SRC})
-ADD_EXECUTABLE(${PROJECT_NAME}-client ${LUODB_CLIENT_SOURCE_SRC})
+ADD_EXECUTABLE(${PROJECT_NAME}-cli ${LUODB_CLI_SOURCE_SRC})
