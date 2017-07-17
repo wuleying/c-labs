@@ -62,3 +62,12 @@ luoLog(int level, const char *fmt, ...) {
         fclose(fp);
     }
 }
+
+void
+luoDebug(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    luoLog(LUO_LOG_DEUBG, fmt, ap);
+
+    va_end(ap);
+}
