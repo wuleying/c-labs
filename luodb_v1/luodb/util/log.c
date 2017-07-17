@@ -10,13 +10,12 @@
 
 #include <luodb/util/log.h>
 
-void
-luoLog(int level, const char *fmt, ...) {
+static void
+_luoLog(int level, const char *fmt, va_list ap) {
     if (level < luo_server.log_level) {
         return;
     }
 
-    va_list ap;
     FILE    *fp;
     time_t  now = time(NULL);
 
@@ -46,7 +45,6 @@ luoLog(int level, const char *fmt, ...) {
         return;
     }
 
-    va_start(ap, fmt);
     luo_str buf = luoStrCreate("", 64);
 
     strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
@@ -64,10 +62,33 @@ luoLog(int level, const char *fmt, ...) {
 }
 
 void
-luoDebug(const char *fmt, ...) {
+luoLogDebug(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    luoLog(LUO_LOG_DEUBG, fmt, ap);
+    _luoLog(LUO_LOG_DEUBG, fmt, ap);
+    va_end(ap);
+}
 
+void
+luoLogNotice(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(LUO_LOG_NOTICE, fmt, ap);
+    va_end(ap);
+}
+
+void
+luoLogWarning(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(LUO_LOG_WARNING, fmt, ap);
+    va_end(ap);
+}
+
+void
+luoLogError(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(LUO_LOG_ERROR, fmt, ap);
     va_end(ap);
 }

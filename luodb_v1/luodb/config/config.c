@@ -42,7 +42,7 @@ loadServerConfig(char *file_name) {
     luo_str line     = NULL;
 
     if (!fp) {
-        luoLog(LUO_LOG_WARNING, "Fatal error, can't open config file [%s].", file_name);
+        luoLogWarning("Fatal error, can't open config file [%s].", file_name);
         exit(1);
     }
 

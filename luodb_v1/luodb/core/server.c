@@ -21,10 +21,10 @@ _initServer() {
 
     luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
 
-    luoLog(LUO_LOG_DEUBG, "Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
+    luoLogDebug("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
 
     if (luo_server.fd == -1) {
-        luoLog(LUO_LOG_ERROR, "Opening TCP port, %s", luo_server.net_error);
+        luoLogError("Opening TCP port, %s", luo_server.net_error);
         exit(1);
     }
 }
@@ -69,7 +69,7 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
         return;
     }
 
-    luoLog(LUO_LOG_DEUBG, "Accepted %s:%d", client_ip, client_port);
+    luoLogDebug("Accepted %s:%d", client_ip, client_port);
 }
 
 static luo_client *
@@ -112,10 +112,10 @@ int main(int argc, char *argv[]) {
     if (argc == 2) {
         loadServerConfig(argv[1]);
     } else if (argc > 2) {
-        luoLog(LUO_LOG_ERROR, "Usage: bin/luodb [/path/to/luodb.conf]");
+        luoLogError("Usage: bin/luodb [/path/to/luodb.conf]");
         exit(1);
     } else {
-        luoLog(LUO_LOG_WARNING, "No config file specified, using the default config.");
+        luoLogWarning("No config file specified, using the default config.");
     }
 
     // 初始化服务端
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
         _daemonize();
     }
 
-    luoLog(LUO_LOG_DEUBG, "Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
+    luoLogDebug("Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
 
     if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {

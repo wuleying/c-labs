@@ -26,10 +26,16 @@
 
 static char *log_level_array[] = {"Debug", "Notice", "Warning", "Error"};
 
-// 记录日志
-void luoLog(int level, const char *fmt, ...);
+// 调试级别日志
+void luoLogDebug(const char *fmt, ...);
 
-// 调试日志
-void luoDebug(const char *fmt, ...);
+// 注意级别日志
+void luoLogNotice(const char *fmt, ...);
+
+// 警告级别日志
+void luoLogWarning(const char *fmt, ...);
+
+// 错误级别日志
+void luoLogError(const char *fmt, ...);
 
 #endif //LUODB_UTIL_LOG_H
