@@ -16,8 +16,8 @@ _luoLog(int level, const char *fmt, va_list ap) {
         return;
     }
 
-    FILE    *fp;
-    time_t  now = time(NULL);
+    FILE   *fp;
+    time_t now = time(NULL);
 
     if (luo_server.log_file_dir == NULL) {
         fp = stdout;
@@ -59,6 +59,14 @@ _luoLog(int level, const char *fmt, va_list ap) {
     if (luo_server.log_file_dir) {
         fclose(fp);
     }
+}
+
+void
+luoLog(int level, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(level, fmt, ap);
+    va_end(ap);
 }
 
 void

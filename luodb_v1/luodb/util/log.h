@@ -26,6 +26,9 @@
 
 static char *log_level_array[] = {"Debug", "Notice", "Warning", "Error"};
 
+// 通用日志
+void luoLog(int level, const char *fmt, ...);
+
 // 调试级别日志
 void luoLogDebug(const char *fmt, ...);
 
