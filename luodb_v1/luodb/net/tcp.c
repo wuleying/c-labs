@@ -10,6 +10,7 @@
 
 #include <luodb/net/tcp.h>
 
+// 设置错误消息
 static void
 luoTcpSetError(char *err, const char *fmt, ...) {
     va_list ap;
@@ -75,11 +76,13 @@ luoTcpGenericConnect(char *err, char *addr, int port, int flags) {
     return s;
 }
 
+// 建立阻塞网络套接字tcp连接
 int
 luoTcpConnect(char *err, char *addr, int port) {
     return luoTcpGenericConnect(err, addr, port, LUO_TCP_CONNECT_NONE);
 }
 
+// 建立非阻塞网络套接字tcp连接
 int
 luoTcpNonBlockConnect(char *err, char *addr, int port) {
     return luoTcpGenericConnect(err, addr, port, LUO_TCP_CONNECT_NONBLOCK);
@@ -231,6 +234,7 @@ luoTcpAccept(char *err, int server_sock, char *ip, int *port) {
     return fd;
 }
 
+// 设置非阻塞
 int
 luoTcpNonBlock(char *err, int fd) {
     int flag;
@@ -248,6 +252,7 @@ luoTcpNonBlock(char *err, int fd) {
     return LUO_TCP_OK;
 }
 
+// 将tcp连接设为非延迟性的，即屏蔽Nagle算法
 int
 luoTcpNoDelay(char *err, int fd) {
     int yes = 1;
@@ -260,6 +265,7 @@ luoTcpNoDelay(char *err, int fd) {
     return LUO_TCP_OK;
 }
 
+// 开启连接检测，避免对方宕机或网络中断时fd一直阻塞
 int
 luoTcpKeepAlive(char *err, int fd) {
     int yes = 1;

@@ -204,17 +204,20 @@ _luoClientReadReply(int fd) {
         exit(1);
     }
 
-    luoLogDebug("type = %c", type);
-
     switch (type) {
+        // 错误信息，具体信息是当前行 - 后的字符
         case '-':
             luoLogError("Error: %s", _luoClientReadSingleLineReply(fd));
             return LUO_RETURN_ERR;
+        // 正确的状态信息，具体信息是当前行 + 后的字符
         case '+':
+        // 返回数值，: 后是相应的数字节符
         case ':':
             return _luoClientReadSingleLineReply(fd);
+        // 下一行数据长度，不包括换行符长度\r\n，$后是对应的长度的数据
         case '$':
             return _luoClientReadBulkReply(fd);
+        // 消息体总共有多少行，不包括当前行，* 后是具体的行数
         case '*':
             return _luoClientReadMultiBulkReply(fd);
         default:
