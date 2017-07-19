@@ -26,7 +26,7 @@
 #define LUO_LOG_ERROR           4
 #define LUO_LOG_FATAL           5
 
-static char *log_level_array[] = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+static char *log_level_array[] = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
 
 // 通用日志
 void luoLog(int level, const char *fmt, ...);

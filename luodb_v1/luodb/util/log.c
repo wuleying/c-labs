@@ -48,7 +48,7 @@ _luoLog(int level, const char *fmt, va_list ap) {
     luo_str buf = luoStrCreate("", 64);
 
     strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
-    fprintf(fp, "%s [%s] ", buf, log_level_array[level]);
+    fprintf(fp, "%s [%5s] ", buf, log_level_array[level]);
     vfprintf(fp, fmt, ap);
     fprintf(fp, "\n");
     fflush(fp);

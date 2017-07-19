@@ -21,7 +21,7 @@ _initServer() {
 
     luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
 
-    luoLogTrace("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
+    luoLogInfo("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
 
     if (luo_server.fd == -1) {
         luoLogError("Opening TCP port, %s", luo_server.net_error);
@@ -97,6 +97,7 @@ createClient(int fd) {
     client->repl_state       = LUO_REPL_NONE;
 
     if((client->reply = luoDListCreate()) == NULL) {
+        luoLogWarn("List create.");
         luoOom("List create");
     }
 
