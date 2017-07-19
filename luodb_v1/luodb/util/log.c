@@ -70,6 +70,14 @@ luoLog(int level, const char *fmt, ...) {
 }
 
 void
+luoLogTrace(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(LUO_LOG_TRACE, fmt, ap);
+    va_end(ap);
+}
+
+void
 luoLogDebug(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
@@ -78,18 +86,18 @@ luoLogDebug(const char *fmt, ...) {
 }
 
 void
-luoLogNotice(const char *fmt, ...) {
+luoLogInfo(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    _luoLog(LUO_LOG_NOTICE, fmt, ap);
+    _luoLog(LUO_LOG_INFO, fmt, ap);
     va_end(ap);
 }
 
 void
-luoLogWarning(const char *fmt, ...) {
+luoLogWarn(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    _luoLog(LUO_LOG_WARNING, fmt, ap);
+    _luoLog(LUO_LOG_WARN, fmt, ap);
     va_end(ap);
 }
 
@@ -98,5 +106,13 @@ luoLogError(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
     _luoLog(LUO_LOG_ERROR, fmt, ap);
+    va_end(ap);
+}
+
+void
+luoLogFatal(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    _luoLog(LUO_LOG_FATAL, fmt, ap);
     va_end(ap);
 }

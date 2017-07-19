@@ -76,7 +76,7 @@ _luoClientConnect() {
 
     fd = luoTcpConnect(err, luo_client_config.host_ip, luo_client_config.host_port);
 
-    luoLogDebug("host_ip = %s, host_port = %d", luo_client_config.host_ip, luo_client_config.host_port);
+    luoLogTrace("host_ip = %s, host_port = %d", luo_client_config.host_ip, luo_client_config.host_port);
 
     if (fd == LUO_TCP_ERR) {
         luoLogError("%s", err);
@@ -182,7 +182,7 @@ _luoClientReadMultiBulkReply(int fd) {
     }
 
     if (elements == 0) {
-        luoLogNotice("Empty list or set.");
+        luoLogInfo("Empty list or set.");
     }
 
     while (elements--) {
@@ -273,7 +273,7 @@ _luoClinetSendCommand(int argc, char **argv) {
         cmd = luoStrCat(cmd, "\r\n");
     }
 
-    luoLogDebug("cmd = %s", cmd);
+    luoLogTrace("cmd = %s", cmd);
 
     luoTcpWrite(fd, cmd, luoStrLen(cmd));
 

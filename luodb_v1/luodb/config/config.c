@@ -42,7 +42,7 @@ loadServerConfig(char *file_name) {
     luo_str line     = NULL;
 
     if (!fp) {
-        luoLogWarning("Fatal error, can't open config file [%s].", file_name);
+        luoLogWarn("Fatal error, can't open config file [%s].", file_name);
         exit(1);
     }
 
@@ -101,14 +101,20 @@ loadServerConfig(char *file_name) {
 
         // 日志级别
         if (!strcasecmp(argv[0], "log_level") && argc == 2) {
-            if (!strcasecmp(argv[1], "debug")) {
+            if (!strcasecmp(argv[1], "trace")) {
+                luo_server.log_level = LUO_LOG_TRACE;
+            } else if (!strcasecmp(argv[1], "debug")) {
                 luo_server.log_level = LUO_LOG_DEUBG;
-            } else if (!strcasecmp(argv[1], "notice")) {
-                luo_server.log_level = LUO_LOG_NOTICE;
-            } else if (!strcasecmp(argv[1], "warning")) {
-                luo_server.log_level = LUO_LOG_WARNING;
+            } else if (!strcasecmp(argv[1], "info")) {
+                luo_server.log_level = LUO_LOG_INFO;
+            } else if (!strcasecmp(argv[1], "warn")) {
+                luo_server.log_level = LUO_LOG_WARN;
+            } else if (!strcasecmp(argv[1], "error")) {
+                luo_server.log_level = LUO_LOG_ERROR;
+            } else if (!strcasecmp(argv[1], "fatal")) {
+                luo_server.log_level = LUO_LOG_FATAL;
             } else {
-                err = "Invaild log level. Must be one of debug, notice, warning, error.";
+                err = "Invaild log level. Must be one of trace, debug, info, warn, error and fatal.";
                 goto _displayError;
             }
         }

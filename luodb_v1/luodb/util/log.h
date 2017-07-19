@@ -19,26 +19,34 @@
 #include <luodb/util/file.h>
 
 // 日志级别
-#define LUO_LOG_DEUBG           0
-#define LUO_LOG_NOTICE          1
-#define LUO_LOG_WARNING         2
-#define LUO_LOG_ERROR           3
+#define LUO_LOG_TRACE           0
+#define LUO_LOG_DEUBG           1
+#define LUO_LOG_INFO            2
+#define LUO_LOG_WARN            3
+#define LUO_LOG_ERROR           4
+#define LUO_LOG_FATAL           5
 
-static char *log_level_array[] = {"Debug", "Notice", "Warning", "Error"};
+static char *log_level_array[] = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
 
 // 通用日志
 void luoLog(int level, const char *fmt, ...);
+
+// 追踪级别日志
+void luoLogTrace(const char *fmt, ...);
 
 // 调试级别日志
 void luoLogDebug(const char *fmt, ...);
 
 // 注意级别日志
-void luoLogNotice(const char *fmt, ...);
+void luoLogInfo(const char *fmt, ...);
 
 // 警告级别日志
-void luoLogWarning(const char *fmt, ...);
+void luoLogWarn(const char *fmt, ...);
 
 // 错误级别日志
 void luoLogError(const char *fmt, ...);
+
+// 致命错误级别日志
+void luoLogFatal(const char *fmt, ...);
 
 #endif //LUODB_UTIL_LOG_H
