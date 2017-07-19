@@ -20,7 +20,7 @@
 
 // 日志级别
 #define LUO_LOG_TRACE           0
-#define LUO_LOG_DEUBG           1
+#define LUO_LOG_DEBUG           1
 #define LUO_LOG_INFO            2
 #define LUO_LOG_WARN            3
 #define LUO_LOG_ERROR           4

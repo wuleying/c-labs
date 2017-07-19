@@ -81,7 +81,7 @@ void
 luoLogDebug(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    _luoLog(LUO_LOG_DEUBG, fmt, ap);
+    _luoLog(LUO_LOG_DEBUG, fmt, ap);
     va_end(ap);
 }
 

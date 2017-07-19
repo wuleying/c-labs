@@ -29,7 +29,7 @@ initServerConfig() {
     luo_server.port          = LUO_SERVER_TCP_PORT;
     luo_server.pid_file_path = NULL;
     luo_server.log_file_dir  = NULL;
-    luo_server.log_level     = LUO_LOG_DEUBG;
+    luo_server.log_level     = LUO_LOG_DEBUG;
     luo_server.event_loop    = NULL;
 }
 
@@ -104,7 +104,7 @@ loadServerConfig(char *file_name) {
             if (!strcasecmp(argv[1], "trace")) {
                 luo_server.log_level = LUO_LOG_TRACE;
             } else if (!strcasecmp(argv[1], "debug")) {
-                luo_server.log_level = LUO_LOG_DEUBG;
+                luo_server.log_level = LUO_LOG_DEBUG;
             } else if (!strcasecmp(argv[1], "info")) {
                 luo_server.log_level = LUO_LOG_INFO;
             } else if (!strcasecmp(argv[1], "warn")) {
