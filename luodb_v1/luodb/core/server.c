@@ -97,7 +97,6 @@ createClient(int fd) {
     client->repl_state       = LUO_REPL_NONE;
 
     if((client->reply = luoDListCreate()) == NULL) {
-        luoLogWarn("List create.");
         luoOom("List create");
     }
 
@@ -107,6 +106,7 @@ createClient(int fd) {
 }
 
 int main(int argc, char *argv[]) {
+
     // 初始化服务端配置
     initServerConfig();
 
@@ -128,6 +128,8 @@ int main(int argc, char *argv[]) {
     }
 
     luoLogInfo("Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
+
+    luoOom("test");
 
     if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {
