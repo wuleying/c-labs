@@ -54,7 +54,7 @@ _daemonize(void) {
 }
 
 static void
-_luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask) {
+_acceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask) {
     int  client_port;
     int  client_fd;
     char client_ip[128];
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
 
     luoLogInfo("Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
 
-    if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
+    if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _acceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {
         fprintf(stderr, "Create file event: Out of memory\n");
         fflush(stderr);
