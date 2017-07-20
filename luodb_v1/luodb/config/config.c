@@ -24,13 +24,21 @@ _yesOrNoToInt(char *str) {
 /* 接口实现 */
 void
 initServerConfig() {
-    luo_server.daemonize     = 0;
-    luo_server.bind_addr     = luoStrNew(LUO_SERVER_TCP_IP);
-    luo_server.port          = LUO_SERVER_TCP_PORT;
-    luo_server.pid_file_path = NULL;
-    luo_server.log_file_dir  = NULL;
-    luo_server.log_level     = LUO_LOG_DEBUG;
-    luo_server.event_loop    = NULL;
+    luo_server.daemonize            = 0;
+    luo_server.bind_addr            = luoStrNew(LUO_SERVER_TCP_IP);
+    luo_server.port                 = LUO_SERVER_TCP_PORT;
+    luo_server.pid_file_path        = NULL;
+    luo_server.log_file_dir         = NULL;
+    luo_server.log_level            = LUO_LOG_DEBUG;
+    luo_server.master               = NULL;
+    luo_server.clients              = NULL;
+    luo_server.slaves               = NULL;
+    luo_server.monitors             = NULL;
+    luo_server.max_clients          = 0;
+    luo_server.stat_start_time      = time(NULL);
+    luo_server.stat_commands_num    = 0;
+    luo_server.stat_connections_num = 0;
+    luo_server.event_loop           = NULL;
 }
 
 void
@@ -82,6 +90,11 @@ loadServerConfig(char *file_name) {
                 err = "Invalid port";
                 goto _displayError;
             }
+        }
+
+        // 客户端最大数量
+        if (!strcasecmp(argv[0], "max_clients") && argc == 2) {
+            luo_server.max_clients = (unsigned int) atoi(argv[1]);
         }
 
         // pid文件路径

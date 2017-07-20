@@ -11,7 +11,7 @@
 #include <luodb/core/server.h>
 
 static void
-_initServer() {
+_luoInitServer() {
     // 忽略SIGINT信号
     signal(SIGHUP, SIG_IGN);
     // 忽略SIGPIPE信号
@@ -30,7 +30,7 @@ _initServer() {
 }
 
 static void
-_daemonize(void) {
+_luoDaemonize(void) {
     int fd;
 
     if (fork() != 0) {
@@ -53,27 +53,8 @@ _daemonize(void) {
     luoFileSavePid(luo_server.pid_file_path, getpid());
 }
 
-static void
-_acceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask) {
-    int  client_port;
-    int  client_fd;
-    char client_ip[128];
-
-    LUO_NOT_USED(event_loop);
-    LUO_NOT_USED(priv_data);
-    LUO_NOT_USED(mask);
-
-    client_fd = luoTcpAccept(luo_server.net_error, fd, client_ip, &client_port);
-
-    if (client_fd == LUO_TCP_ERR) {
-        return;
-    }
-
-    luoLogTrace("Accepted %s:%d", client_ip, client_port);
-}
-
 static luo_client *
-createClient(int fd) {
+_luoCreateClient(int fd) {
     luo_client *client = luoMalloc(sizeof(luo_client));
 
     luoTcpNonBlock(NULL, fd);
@@ -96,13 +77,86 @@ createClient(int fd) {
     client->authenticated    = 0;
     client->repl_state       = LUO_REPL_NONE;
 
-    if((client->reply = luoDListCreate()) == NULL) {
+    if ((client->reply = luoDListCreate()) == NULL) {
         luoOom("List create");
     }
 
     // todo set free/dup mothod
 
     return client;
+}
+
+static void
+_luoFreeClient(luo_client *client) {
+    luo_dlist_node *dlist_node;
+
+    luoEventFileDelete(luo_server.event_loop, client->fd, LUO_EVENT_READABLE);
+    luoEventFileDelete(luo_server.event_loop, client->fd, LUO_EVENT_WRITABLE);
+
+    luoStrFree(client->query_buf);
+    luoDListRelease(client->reply);
+    close(client->fd);
+
+    dlist_node = luoDListSearchKey(luo_server.clients, client);
+    assert(dlist_node != NULL);
+    luoDListDeleteNode(luo_server.clients, dlist_node);
+
+    if (client->flags & LUO_CLIENT_SLAVE) {
+        if (client->repl_state == LUO_REPL_SEND_BULK && client->repl_db_fd != -1) {
+            close(client->repl_db_fd);
+        }
+
+        luo_dlist *dlist = (client->flags & LUO_CLIENT_MONITOR) ? luo_server.monitors : luo_server.slaves;
+
+        dlist_node = luoDListSearchKey(dlist, client);
+        luoDListDeleteNode(dlist, dlist_node);
+    }
+
+    if (client->flags & LUO_CLIENT_MASTER) {
+        luo_server.master     = NULL;
+        luo_server.repl_state = LUO_REPL_CONNECT;
+    }
+
+    luoFree(client->argv);
+    luoFree(client);
+}
+
+static void
+_luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask) {
+    int  client_port;
+    int  client_fd;
+    char client_ip[128];
+
+    luo_client *client;
+
+    LUO_NOT_USED(event_loop);
+    LUO_NOT_USED(priv_data);
+    LUO_NOT_USED(mask);
+
+    client_fd = luoTcpAccept(luo_server.net_error, fd, client_ip, &client_port);
+
+    if (client_fd == LUO_TCP_ERR) {
+        return;
+    }
+
+    luoLogTrace("Accepted %s:%d", client_ip, client_port);
+
+    client = _luoCreateClient(client_fd);
+
+    if (client == NULL) {
+        luoLogWarn("Error allocating resoures for the client.");
+        close(client_fd);
+        return;
+    }
+
+    if (luo_server.max_clients && LUO_DLIST_LENGTH(luo_server.clients) > luo_server.max_clients) {
+        char *err = "-ERR max number of clients reached\r\n";
+        (void) write(client->fd, err, strlen(err));
+        _luoFreeClient(client);
+        return;
+    }
+
+    luo_server.stat_connections_num++;
 }
 
 int main(int argc, char *argv[]) {
@@ -120,16 +174,16 @@ int main(int argc, char *argv[]) {
     }
 
     // 初始化服务端
-    _initServer();
+    _luoInitServer();
 
     // 以守护进程运行
     if (luo_server.daemonize) {
-        _daemonize();
+        _luoDaemonize();
     }
 
     luoLogInfo("Luodb start success. Version: %s, Command: %s %s", LUO_VERSION, argv[0], argv[1]);
 
-    if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _acceptHandler, NULL, NULL) ==
+    if (luoEventFileCreate(luo_server.event_loop, luo_server.fd, LUO_EVENT_READABLE, _luoAcceptHandler, NULL, NULL) ==
         LUO_EVENT_ERR) {
         fprintf(stderr, "Create file event: Out of memory\n");
         fflush(stderr);

@@ -21,47 +21,4 @@
 #include <luodb/header/structure.h>
 #include <luodb/header/util.h>
 
-/* 常量 */
-#define LUO_REPL_NONE           0
-#define LUO_REPL_CONNECT        1
-#define LUO_REPL_CONNECTED      2
-
-/* 结构体定义 */
-typedef struct luo_object_s {
-    void *ptr;
-    int  type;
-    int  refcount;
-} luo_object;
-
-typedef struct luo_db_s {
-    luo_dict *dict;
-    luo_dict *expires;
-    int      id;
-} luo_db;
-
-typedef struct luo_client_s {
-    int        fd;
-    luo_db     *db;
-    int        dict_id;
-    luo_str    query_buf;
-    luo_object **argv;
-    int        argc;
-    int        bulk_len;
-    luo_dlist  *reply;
-    int        sent_len;
-    time_t     last_interaction;
-    int        flags;
-    int        slave_sel_db;
-    int        authenticated;
-    int        repl_state;
-    int        repl_db_fd;
-    long       repl_db_off;
-    off_t      repl_db_size;
-} luo_client;
-
-struct save_param_s {
-    time_t seconds;
-    int    changes;
-};
-
 #endif //LUODB_SERVER_H
