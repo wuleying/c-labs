@@ -34,6 +34,7 @@ initServerConfig() {
     luo_server.clients              = NULL;
     luo_server.slaves               = NULL;
     luo_server.monitors             = NULL;
+    luo_server.repl_state           = 0;
     luo_server.max_clients          = 0;
     luo_server.stat_start_time      = time(NULL);
     luo_server.stat_commands_num    = 0;
