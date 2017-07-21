@@ -76,8 +76,9 @@ _luoCreateClient(int fd) {
     client->last_interaction = time(NULL);
     client->authenticated    = 0;
     client->repl_state       = LUO_REPL_NONE;
+    client->reply            = luoDListCreate();
 
-    if ((client->reply = luoDListCreate()) == NULL) {
+    if (client->reply == NULL) {
         luoOom("List create");
     }
 
@@ -148,6 +149,8 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
         close(client_fd);
         return;
     }
+
+    luoLogTrace("Client number = %d", LUO_DLIST_LENGTH(luo_server.clients));
 
     if (luo_server.max_clients && LUO_DLIST_LENGTH(luo_server.clients) > luo_server.max_clients) {
         char *err = "-ERR max number of clients reached\r\n";
