@@ -163,7 +163,6 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
 }
 
 int main(int argc, char *argv[]) {
-
     // 初始化服务端配置
     initServerConfig();
 
