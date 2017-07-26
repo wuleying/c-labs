@@ -115,12 +115,12 @@ _luoClientReadSingleLineReply(int fd) {
     luo_str reply = _luoClientReadLine(fd);
 
     if (reply == NULL) {
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     printf("%s\n", reply);
 
-    return LUO_RETURN_OK;
+    return LUO_OK;
 }
 
 static int
@@ -132,7 +132,7 @@ _luoClientReadBulkReply(int fd) {
     luo_str reply_len = _luoClientReadLine(fd);
 
     if (reply_len == NULL) {
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     bulk_len = atoi(reply_len);
@@ -140,7 +140,7 @@ _luoClientReadBulkReply(int fd) {
     if (bulk_len == -1) {
         luoStrFree(reply_len);
         luoLogError("Is nil.");
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     reply = luoMalloc((size_t) bulk_len);
@@ -150,7 +150,7 @@ _luoClientReadBulkReply(int fd) {
 
     if (bulk_len && fwrite(reply, (size_t) bulk_len, 1, stdout) == 0) {
         luoFree(reply);
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     if (isatty(fileno(stdout)) && reply[bulk_len - 1] != '\n') {
@@ -159,7 +159,7 @@ _luoClientReadBulkReply(int fd) {
 
     luoFree(reply);
 
-    return LUO_RETURN_OK;
+    return LUO_OK;
 }
 
 static int
@@ -170,7 +170,7 @@ _luoClientReadMultiBulkReply(int fd) {
     luo_str reply_len = _luoClientReadLine(fd);
 
     if (reply_len == NULL) {
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     elements = atoi(reply_len);
@@ -178,7 +178,7 @@ _luoClientReadMultiBulkReply(int fd) {
     if (elements == -1) {
         luoStrFree(reply_len);
         luoLogError("Is nil.");
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     if (elements == 0) {
@@ -188,12 +188,12 @@ _luoClientReadMultiBulkReply(int fd) {
     while (elements--) {
         printf("%d. ", i);
         if (_luoClientReadLine(fd)) {
-            return LUO_RETURN_ERR;
+            return LUO_ERR;
         }
         i++;
     }
 
-    return LUO_RETURN_OK;
+    return LUO_OK;
 }
 
 static int
@@ -208,7 +208,7 @@ _luoClientReadReply(int fd) {
         // 错误信息，具体信息是当前行 - 后的字符
         case '-':
             luoLogError("Error: %s", _luoClientReadSingleLineReply(fd));
-            return LUO_RETURN_ERR;
+            return LUO_ERR;
         // 正确的状态信息，具体信息是当前行 + 后的字符
         case '+':
         // 返回数值，: 后是相应的数字节符
@@ -222,7 +222,7 @@ _luoClientReadReply(int fd) {
             return _luoClientReadMultiBulkReply(fd);
         default:
             luoLogError("Pootocol error, got '%c' as reply type byte.", type);
-            return LUO_RETURN_ERR;
+            return LUO_ERR;
     }
 }
 
@@ -239,19 +239,19 @@ _luoClinetSendCommand(int argc, char **argv) {
 
     if (!luo_command) {
         luoLogError("Unknow command '%s'", argv[0]);
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     if ((luo_command->arity > 0 && argc != luo_command->arity) ||
         (luo_command->arity < 0 && argc < -luo_command->arity)) {
         luoLogError("Wrong number of arguments for '%s'", luo_command->name);
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     fd = _luoClientConnect();
 
     if (fd == -1) {
-        return LUO_RETURN_ERR;
+        return LUO_ERR;
     }
 
     for (i = 0; i < argc; ++i) {
@@ -285,7 +285,7 @@ _luoClinetSendCommand(int argc, char **argv) {
         return result_val;
     }
 
-    return LUO_RETURN_OK;
+    return LUO_OK;
 }
 
 int

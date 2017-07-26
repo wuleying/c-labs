@@ -13,9 +13,9 @@
 // 默认TCP端口
 #define LUO_SERVER_TCP_PORT         20088
 
-// 函数返回状态
-#define LUO_RETURN_OK               0
-#define LUO_RETURN_ERR              1
+// 全局状态
+#define LUO_OK                      0
+#define LUO_ERR                     1
 
 // 命令类型
 #define LUO_CMD_INLINE              1

@@ -345,6 +345,7 @@ luoDListRewindTail(luo_dlist *dlist) {
     dlist->iter.direction = LUO_DLIST_START_TAIL;
 }
 
+// 根据链表定义的迭代器获取下一节点
 luo_dlist_node *
 luoDListYield(luo_dlist *dlist) {
     return luoDListNext(&dlist->iter);

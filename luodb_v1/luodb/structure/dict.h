@@ -16,30 +16,43 @@
 #include <assert.h>
 #include <limits.h>
 
+#include <luodb/common/constant.h>
 #include <luodb/common/macro.h>
 #include <luodb/memory/mem.h>
 
 /* 结构体 */
+// 字典元素,保存k-v值
 typedef struct luo_dict_entry_s {
+    // 键指针
     void                    *key;
+    // 值指针
     void                    *val;
+    // 后继字典元素指针
     struct luo_dict_entry_s *next;
 } luo_dict_entry;
 
+// 字典类型
 typedef struct luo_dict_type_s {
+    // 哈希计算方法,返回无符号整型
     unsigned int (*hashFunction)(const void *key);
 
-    void         *(*key_dup)(void *priv_data, const void *key);
+    // 复制键函数指针
+    void *(*key_dup)(void *priv_data, const void *key);
 
-    void         *(*val_dup)(void *priv_data, const void *object);
+    // 复制值函数指针
+    void *(*val_dup)(void *priv_data, const void *object);
 
+    // 键比较函数指针
     int          (*key_compare)(void *priv_data, const void *key1, const void *key2);
 
+    // 键的析构函数指针
     void         (*key_destructor)(void *priv_data, void *key);
 
+    // 值的析构函数指针
     void         (*val_destructor)(void *priv_data, void *object);
 } luo_dict_type;
 
+// 字典
 typedef struct luo_dict_s {
     luo_dict_entry **table;
     luo_dict_type  *type;
@@ -49,6 +62,7 @@ typedef struct luo_dict_s {
     void           *priv_data;
 } luo_dict;
 
+// 字典迭代器
 typedef struct luo_dict_iterator_s {
     luo_dict       *dict;
     int            index;
@@ -57,11 +71,7 @@ typedef struct luo_dict_iterator_s {
 } luo_dict_iterator;
 
 /* 常量 */
-#define LUO_DICT_OK             0
-#define LUO_DICT_ERR            1
-
 #define LUO_DICT_INITIAL_SIZE   16
-
 #define LUO_DICT_STATS_VECTLEN  50
 
 #define LUO_DICT_FREE_ENTRY_VAL(dict, entry)                            \

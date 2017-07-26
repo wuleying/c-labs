@@ -51,7 +51,7 @@ _luoDictInit(luo_dict *dict, luo_dict_type *type, void *priv_data_ptr) {
     dict->type      = type;
     dict->priv_data = priv_data_ptr;
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 static unsigned long
@@ -80,7 +80,7 @@ _luoDictExpandIfNeeded(luo_dict *dict) {
         return luoDictExpand(dict, dict->size * 2);
     }
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 static int
@@ -88,7 +88,7 @@ _luoDictKeyIndex(luo_dict *dict, const void *key) {
     unsigned int   h;
     luo_dict_entry *dict_entry;
 
-    if (_luoDictExpandIfNeeded(dict) == LUO_DICT_ERR) {
+    if (_luoDictExpandIfNeeded(dict) == LUO_ERR) {
         return -1;
     }
 
@@ -114,7 +114,7 @@ _luoDictGenericDelete(luo_dict *dict, const void *key, int nofree) {
     luo_dict_entry *dict_entry_prev = NULL;
 
     if (dict->size == 0) {
-        return LUO_DICT_ERR;
+        return LUO_ERR;
     }
 
     h = (unsigned int) (LUO_DICT_HASH_KEY(dict, key) & dict->size_mask);
@@ -137,14 +137,14 @@ _luoDictGenericDelete(luo_dict *dict, const void *key, int nofree) {
             _luoDictFree(dict_entry);
             dict->used--;
 
-            return LUO_DICT_OK;
+            return LUO_OK;
         }
 
         dict_entry_prev = dict_entry;
         dict_entry      = dict_entry->next;
     }
 
-    return LUO_DICT_ERR;
+    return LUO_ERR;
 }
 
 int
@@ -176,7 +176,7 @@ _luoDictClear(luo_dict *dict) {
     _luoDictFree(dict->table);
     _luoDictReset(dict);
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 unsigned int
@@ -224,7 +224,7 @@ luoDictExpand(luo_dict *dict, unsigned long size) {
     unsigned long i;
 
     if (dict->used > size) {
-        return LUO_DICT_ERR;
+        return LUO_ERR;
     }
 
     _luoDictInit(&new_dict, dict->type, dict->priv_data);
@@ -265,7 +265,7 @@ luoDictExpand(luo_dict *dict, unsigned long size) {
     _luoDictFree(dict->table);
     *dict = new_dict;
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 int
@@ -275,7 +275,7 @@ luoDictAdd(luo_dict *dict, void *key, void *val) {
     luo_dict_entry *entry;
 
     if ((index = _luoDictKeyIndex(dict, key)) == -1) {
-        return LUO_DICT_ERR;
+        return LUO_ERR;
     }
 
     entry = _luoDictAlloc(sizeof(luo_dict_entry));
@@ -289,15 +289,15 @@ luoDictAdd(luo_dict *dict, void *key, void *val) {
 
     dict->used++;
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 int
 luoDictReplace(luo_dict *dict, void *key, void *val) {
     luo_dict_entry *entry;
 
-    if (luoDictAdd(dict, key, val) == LUO_DICT_OK) {
-        return LUO_DICT_OK;
+    if (luoDictAdd(dict, key, val) == LUO_OK) {
+        return LUO_OK;
     }
 
     entry = luoDictFind(dict, key);
@@ -305,7 +305,7 @@ luoDictReplace(luo_dict *dict, void *key, void *val) {
     LUO_DICT_FREE_ENTRY_VAL(dict, entry);
     LUO_DICT_SET_HASH_VAL(dict, entry, val);
 
-    return LUO_DICT_OK;
+    return LUO_OK;
 }
 
 int
