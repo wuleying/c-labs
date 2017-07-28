@@ -52,43 +52,58 @@ typedef struct luo_dict_type_s {
     void         (*val_destructor)(void *priv_data, void *object);
 } luo_dict_type;
 
-// 字典
+// 字典哈希表
 typedef struct luo_dict_s {
+    // 字典数组 bucket
     luo_dict_entry **table;
+    // 字典类型
     luo_dict_type  *type;
+    // bucket的层数
     unsigned long  size;
     unsigned long  size_mask;
+    // 字典已使用数量
     unsigned long  used;
+    // 私有数据指针
     void           *priv_data;
 } luo_dict;
 
 // 字典迭代器
 typedef struct luo_dict_iterator_s {
+    // 当前字典
     luo_dict       *dict;
+    // 下标
     int            index;
+    // 当前字典数组
     luo_dict_entry *entry;
+    // 当前字典数组后继
     luo_dict_entry *entry_next;
 } luo_dict_iterator;
 
 /* 常量 */
+// 字典初始化时bucket的数量
 #define LUO_DICT_INITIAL_SIZE   16
+// 调试用 clvector 长度
 #define LUO_DICT_STATS_VECTLEN  50
 
+// 调用字典定义的val释放函数
 #define LUO_DICT_FREE_ENTRY_VAL(dict, entry)                            \
     if((dict)->type->val_destructor)                                    \
         (dict)->type->val_destructor((dict)->priv_data, (entry)->val)
 
-#define LUO_DICT_SET_HASH_VAL(dict, entry, _val_) do {                   \
+// 调用字典定义的val复制函数,未定义直接复制val
+#define LUO_DICT_SET_HASH_VAL(dict, entry, _val_) do {                  \
     if((dict)->type->val_dup)                                           \
         entry->val = (dict)->type->val_dup((dict)->priv_data, _val_);   \
     else                                                                \
         entry->val = (_val_);                                           \
 } while(0)
 
+// 调用字典定义的key释放函数
 #define LUO_DICT_FREE_ENTRY_KEY(dict, entry)                            \
     if((dict)->type->key_destructor)                                    \
         (dict)->type->key_destructor((dict)->priv_data, (entry)->key)
 
+// 调用字典定义的key复制函数,未定义直接复制key
 #define LUO_DICT_SET_HASH_KEY(dict, entry, _key_) do {                  \
     if((dict)->type->key_dup)                                           \
         entry->key = (dict)->type->key_dup((dict)->priv_data, _key_);   \
@@ -96,19 +111,25 @@ typedef struct luo_dict_iterator_s {
         entry->key = (_key_);                                           \
 } while(0)
 
-#define LUO_DICT_COMPARE_HASH_KEYS(dict, key1, key2)                        \
+// 调用字典定义的key比较函数,未定义直接比较key
+#define LUO_DICT_COMPARE_HASH_KEYS(dict, key1, key2)                    \
     (((dict)->type->key_compare) ?                                      \
         (dict)->type->key_compare((dict)->priv_data, key1, key2) :      \
         (key1) == (key2))
 
+// 哈希定位函数
 #define LUO_DICT_HASH_KEY(dict, key) (dict)->type->hashFunction(key)
 
+// 获取字典元素的key
 #define LUO_DICT_GET_ENTRY_KEY(dict_entry) ((dict_entry)->key)
 
+// 获取字典元素的val
 #define LUO_DICT_GET_ENTRY_VAL(dict_entry) ((dict_entry)->val)
 
+// 获取字典bucket的层数
 #define LUO_DICT_GET_SIZE(dict) ((dict)->size)
 
+// 获取字典已使用数量
 #define LUO_DICT_GET_USED(dict) ((dict)->used)
 
 /* 接口 */
