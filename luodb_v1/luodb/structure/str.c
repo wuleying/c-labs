@@ -51,7 +51,7 @@ luoStrEmpty() {
 int
 luoStrLen(const luo_str ls) {
     struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);
-    return lss->len;
+    return (int) lss->len;
 }
 
 luo_str
