@@ -10,16 +10,21 @@
 
 #include <luodb/util/log.h>
 
+// 私有方法,日志落地
 static void
 _luoLog(int level, const char *fmt, va_list ap) {
+    // 日志级别低于设置的最低日志级别,直接返回
     if (level < luo_server.log_level) {
         return;
     }
 
+    // 文件操作句柄
     FILE   *fp;
+    // 当前时间
     time_t now = time(NULL);
 
     if (luo_server.log_file_dir == NULL) {
+        // 未设置日志目录,直接将日志输出到标准输出
         fp = stdout;
     } else {
         luo_str date_buf     = luoStrCreate("", 64);
@@ -61,6 +66,7 @@ _luoLog(int level, const char *fmt, va_list ap) {
     }
 }
 
+// 通用日志
 void
 luoLog(int level, const char *fmt, ...) {
     va_list ap;
@@ -69,6 +75,7 @@ luoLog(int level, const char *fmt, ...) {
     va_end(ap);
 }
 
+// 追踪日志
 void
 luoLogTrace(const char *fmt, ...) {
     va_list ap;
@@ -77,6 +84,7 @@ luoLogTrace(const char *fmt, ...) {
     va_end(ap);
 }
 
+// 调试级别日志
 void
 luoLogDebug(const char *fmt, ...) {
     va_list ap;
@@ -85,6 +93,7 @@ luoLogDebug(const char *fmt, ...) {
     va_end(ap);
 }
 
+// 常规信息级别日志
 void
 luoLogInfo(const char *fmt, ...) {
     va_list ap;
@@ -93,6 +102,7 @@ luoLogInfo(const char *fmt, ...) {
     va_end(ap);
 }
 
+// 警告级别日志
 void
 luoLogWarn(const char *fmt, ...) {
     va_list ap;
@@ -101,6 +111,7 @@ luoLogWarn(const char *fmt, ...) {
     va_end(ap);
 }
 
+// 错误级别日志
 void
 luoLogError(const char *fmt, ...) {
     va_list ap;
@@ -109,6 +120,7 @@ luoLogError(const char *fmt, ...) {
     va_end(ap);
 }
 
+// 致命错误级别日志
 void
 luoLogFatal(const char *fmt, ...) {
     va_list ap;

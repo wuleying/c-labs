@@ -4,6 +4,7 @@
 
 #include <luodb/util/file.h>
 
+// 递归生成目录
 void
 luoFileMakeDirs(char *mul_dir) {
     int  i;
@@ -31,9 +32,10 @@ luoFileMakeDirs(char *mul_dir) {
     }
 }
 
+// 文件保存pid
 void
 luoFileSavePid(char *pid_file_path, pid_t pid) {
-    // 保存pid
+    // 文件资源句柄
     FILE *fp = fopen(pid_file_path, "w");
     if (fp) {
         fprintf(fp, "%d\n", pid);
