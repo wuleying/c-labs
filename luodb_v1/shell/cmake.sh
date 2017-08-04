@@ -19,37 +19,37 @@ init(){
     ENV_BUILD_DIR="$ENV_ROOT_DIR"/build
     ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 
-    echo "ENV_ROOT_DIR:     $ENV_ROOT_DIR"
-    echo "ENV_BUILD_DIR:    $ENV_BUILD_DIR"
-    echo "ENV_BIN_DIR:      $ENV_BIN_DIR"
+     _print "init" "ENV_ROOT_DIR:     $ENV_ROOT_DIR"
+     _print "init" "ENV_BUILD_DIR:    $ENV_BUILD_DIR"
+     _print "init" "ENV_BIN_DIR:      $ENV_BIN_DIR"
 }
 
 # 清理工作
-cleanup(){
-    echo "cleanup start..."
+clean(){
+    _print "clean" "start..."
     rm -rf "$ENV_BUILD_DIR"
     rm -rf "$ENV_BIN_DIR"
-    echo "cleanup end..."
+    _print "clean" "end..."
 }
 
 # 成生编译目录
 make_dir(){
-    echo "mkdir start..."
+    _print "mkdir" "start..."
     mkdir "$ENV_BUILD_DIR"
     mkdir "$ENV_BIN_DIR"
-    echo "mkdir end..."
+    _print "mkdir" "end..."
 }
 
 # 编译
 build() {
     cd "$ENV_BUILD_DIR" || exit
-    echo "cd $ENV_BUILD_DIR"
+    _print "build" "cd $ENV_BUILD_DIR"
 
     cmake ..
-    echo "cmake .."
+    _print "build" "cmake .."
 
     make
-    echo "make"
+    _print "build" "make"
 
     if [[ -f "$ENV_BIN_DIR"/"$SERVER_NAME" ]]; then
         strip "$ENV_BIN_DIR"/"$SERVER_NAME"
@@ -61,12 +61,16 @@ build() {
         chmod +x "$ENV_BIN_DIR"/"$CLIENT_NAME"
     fi
 
-    echo "build is done."
+    _print "build" "build is done."
+}
+
+_print() {
+    printf "[%-5s] %s\n" "$1" "$2"
 }
 
 main(){
     init
-    cleanup
+    clean
     make_dir
     build
 }
