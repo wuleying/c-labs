@@ -1,45 +1,74 @@
 #!/usr/bin/env bash
+# 项目名称
+PROJECT_NAME="luodb"
+# 服务端名称
+SERVER_NAME="$PROJECT_NAME"-server
+# 客户端名称
+CLIENT_NAME="$PROJECT_NAME"-client
 
-project_name="luodb"
-server_name="$project_name"-server
-client_name="$project_name"-client
+# 根目录
+ENV_ROOT_DIR=""
+# build目录
+ENV_BUILD_DIR=""
+# bin目录
+ENV_BIN_DIR=""
 
-root_dir=$(cd "$(dirname "$1")" || exit; pwd)
-echo "root_dir:     $root_dir"
+# 初始化
+init(){
+    ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
+    ENV_BUILD_DIR="$ENV_ROOT_DIR"/build
+    ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
 
-build_dir="$root_dir"/build
-echo "build_dir:    $build_dir"
+    echo "ENV_ROOT_DIR:     $ENV_ROOT_DIR"
+    echo "ENV_BUILD_DIR:    $ENV_BUILD_DIR"
+    echo "ENV_BIN_DIR:      $ENV_BIN_DIR"
+}
 
-bin_dir="$root_dir"/bin
-echo "bin_dir:      $bin_dir"
+# 清理工作
+cleanup(){
+    echo "cleanup start..."
+    rm -rf "$ENV_BUILD_DIR"
+    rm -rf "$ENV_BIN_DIR"
+    echo "cleanup end..."
+}
 
-echo "cleanup start..."
+# 成生编译目录
+make_dir(){
+    echo "mkdir start..."
+    mkdir "$ENV_BUILD_DIR"
+    mkdir "$ENV_BIN_DIR"
+    echo "mkdir end..."
+}
 
-rm -rf "$bin_dir"
-rm -rf "$build_dir"
+# 编译
+build() {
+    cd "$ENV_BUILD_DIR" || exit
+    echo "cd $ENV_BUILD_DIR"
 
-echo "mkdir..."
+    cmake ..
+    echo "cmake .."
 
-mkdir "$bin_dir"
-mkdir "$build_dir"
+    make
+    echo "make"
 
-echo "cd $build_dir"
-cd "$build_dir" || exit
+    if [[ -f "$ENV_BIN_DIR"/"$SERVER_NAME" ]]; then
+        strip "$ENV_BIN_DIR"/"$SERVER_NAME"
+        chmod +x "$ENV_BIN_DIR"/"$SERVER_NAME"
+    fi
 
-echo "cmake .."
-cmake ..
+    if [[ -f "$ENV_BIN_DIR"/"$CLIENT_NAME" ]]; then
+        strip "$ENV_BIN_DIR"/"$CLIENT_NAME"
+        chmod +x "$ENV_BIN_DIR"/"$CLIENT_NAME"
+    fi
 
-echo "make"
-make
+    echo "build is done."
+}
 
-if [[ -f "$bin_dir"/"$server_name" ]]; then
-    strip "$bin_dir"/"$server_name"
-    chmod +x "$bin_dir"/"$server_name"
-fi
+main(){
+    init
+    cleanup
+    make_dir
+    build
+}
 
-if [[ -f "$bin_dir"/"$client_name" ]]; then
-    strip "$bin_dir"/"$client_name"
-    chmod +x "$bin_dir"/"$client_name"
-fi
-
-echo "cmake done."
+main "$@"
