@@ -69,7 +69,7 @@ _print() {
 }
 
 main(){
-    init
+    init "$@"
     clean
     make_dir
     build
