@@ -9,7 +9,6 @@
 //
 
 #include <luodb/memory/mem.h>
-#include <luodb/util/log.h>
 
 // 已分配内存
 static size_t _used_memory = 0;
@@ -87,13 +86,12 @@ luoStrdup(const char *str) {
 void
 luoOom(const char *msg) {
     fprintf(stderr, "%s: Out of memory\n", msg);
-    luoLogWarn("%s: Out of memory", msg);
     fflush(stderr);
     sleep(1);
     abort();
 }
 
-// 返回已使用内存大小
+// 已使用内存大小
 size_t
 luoMallocUsedMemory(void) {
     return _used_memory;
