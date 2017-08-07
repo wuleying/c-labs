@@ -31,6 +31,7 @@ _luoLog(int level, const char *fmt, va_list ap) {
         luo_str log_file_dir = luoStrCreate("", 1024);
         luo_str log_file     = luoStrCreate("", 1024);
 
+        // 日志目录格式 年/月/日
         strftime(date_buf, 64, "%G/%m/%d", localtime(&now));
 
         sprintf(log_file_dir, "%s/%s", luo_server.log_file_dir, date_buf);
@@ -39,6 +40,8 @@ _luoLog(int level, const char *fmt, va_list ap) {
         luoFileMakeDirs(log_file_dir);
 
         sprintf(log_file, "%s/luodb.log", log_file_dir);
+
+        // 打开日志文件 获取文件操作句柄
         fp = fopen(log_file, "a");
 
         luoStrFree(date_buf);
@@ -46,22 +49,28 @@ _luoLog(int level, const char *fmt, va_list ap) {
         luoStrFree(log_file);
     }
 
+    // 文件操作句柄为空
     if (fp == NULL) {
         return;
     }
 
+    // 日志buff
     luo_str buf = luoStrCreate("", 64);
 
+    // 文件日志格式
     strftime(buf, 64, "%F %H:%M:%S", localtime(&now));
+
+    // 日志落地
     fprintf(fp, "%s [%5s] ", buf, log_level_array[level]);
     vfprintf(fp, fmt, ap);
     fprintf(fp, "\n");
     fflush(fp);
 
+    // 释放buff内存
     luoStrFree(buf);
-    va_end(ap);
 
     if (luo_server.log_file_dir) {
+        // 关闭文件操作句柄
         fclose(fp);
     }
 }

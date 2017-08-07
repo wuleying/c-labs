@@ -61,7 +61,7 @@ build() {
         chmod +x "$ENV_BIN_DIR"/"$CLIENT_NAME"
     fi
 
-    _print "build is done."
+    _print "done..."
 }
 
 _print() {
