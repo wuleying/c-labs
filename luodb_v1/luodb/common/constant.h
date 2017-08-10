@@ -5,9 +5,6 @@
 #ifndef LUODB_COMMON_CONSTANT_H
 #define LUODB_COMMON_CONSTANT_H
 
-// 系统版本
-#define LUO_VERSION                 "0.0.1"
-
 // 默认IP
 #define LUO_SERVER_TCP_IP           "127.0.0.1"
 // 默认TCP端口

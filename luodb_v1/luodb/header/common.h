@@ -7,5 +7,6 @@
 
 #include <luodb/common/constant.h>
 #include <luodb/common/macro.h>
+#include <luodb/common/version.h>
 
 #endif //LUODB_COMMON_H
