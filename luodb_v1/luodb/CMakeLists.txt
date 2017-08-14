@@ -5,6 +5,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 设置编译选项
 #SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
 
+# 服务端源文件
 SET(LUODB_SERVER_SOURCE_SRC
         config/config.c
         core/server.c
@@ -23,7 +24,7 @@ SET(LUODB_SERVER_SOURCE_SRC
         util/file.c
         )
 
-
+# 客户端源文件
 SET(LUODB_CLIENT_SOURCE_SRC
         config/config.c
         core/client.c
