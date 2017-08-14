@@ -37,16 +37,30 @@ init(){
 # 清理工作
 clean(){
     _print "start..."
-    rm -rf "$ENV_BUILD_DIR"
-    rm "$ENV_BIN_DIR/$PROJECT_NAME-$ENV_BUILD_MODE"
+
+    if [[ -d "$ENV_BUILD_DIR" ]]; then
+        rm -rf "$ENV_BUILD_DIR"
+    fi
+
+    if [[ -f "$ENV_BIN_DIR/$PROJECT_NAME-$ENV_BUILD_MODE" ]]; then
+        rm "$ENV_BIN_DIR/$PROJECT_NAME-$ENV_BUILD_MODE"
+    fi
+
     _print "end..."
 }
 
 # 成生编译目录
 mdir(){
     _print "start..."
-    mkdir "$ENV_BUILD_DIR"
-    mkdir "$ENV_BIN_DIR"
+
+    if [[ ! -d "$ENV_BUILD_DIR" ]]; then
+        mkdir "$ENV_BUILD_DIR"
+    fi
+
+    if [[ ! -d "$ENV_BIN_DIR" ]]; then
+        mkdir "$ENV_BIN_DIR"
+    fi
+
     _print "end..."
 }
 
