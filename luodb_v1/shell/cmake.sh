@@ -13,8 +13,18 @@ ENV_BUILD_DIR=""
 # bin目录
 ENV_BIN_DIR=""
 
+# 编译参数
+ENV_BUILD_MODE="server"
+
 # 初始化
 init(){
+    # 编译参数
+    if [ -n "$1" ]; then
+        ENV_BUILD_MODE=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    fi
+
+    _print "ENV_BUILD_MODE:   $ENV_BUILD_MODE"
+
     ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
     ENV_BUILD_DIR="$ENV_ROOT_DIR"/build
     ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
@@ -28,7 +38,7 @@ init(){
 clean(){
     _print "start..."
     rm -rf "$ENV_BUILD_DIR"
-    rm -rf "$ENV_BIN_DIR"
+    rm "$ENV_BIN_DIR/$PROJECT_NAME-$ENV_BUILD_MODE"
     _print "end..."
 }
 
@@ -45,8 +55,8 @@ build() {
     cd "$ENV_BUILD_DIR" || exit
     _print "cd $ENV_BUILD_DIR"
 
-    cmake ..
-    _print "cmake .."
+    cmake -D BUILD_MODE="$ENV_BUILD_MODE" ..
+    _print "cmake -D BUILD_MODE=${ENV_BUILD_MODE} .."
 
     make
     _print "make"
