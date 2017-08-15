@@ -43,10 +43,12 @@ clean(){
     _print "start..."
 
     if [[ -d "$ENV_BUILD_DIR" ]]; then
+        _print "rm -rf $ENV_BUILD_DIR"
         rm -rf "$ENV_BUILD_DIR"
     fi
 
     if [[ -f "$ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE" ]]; then
+        _print "rm $ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE"
         rm "$ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE"
     fi
 
@@ -58,10 +60,12 @@ mdir(){
     _print "start..."
 
     if [[ ! -d "$ENV_BUILD_DIR" ]]; then
+        _print "mkdir $ENV_BUILD_DIR"
         mkdir "$ENV_BUILD_DIR"
     fi
 
     if [[ ! -d "$ENV_BIN_DIR" ]]; then
+        _print "mkdir $ENV_BIN_DIR"
         mkdir "$ENV_BIN_DIR"
     fi
 
@@ -70,14 +74,14 @@ mdir(){
 
 # 编译
 build() {
-    cd "$ENV_BUILD_DIR" || exit
     _print "cd $ENV_BUILD_DIR"
+    cd "$ENV_BUILD_DIR" || exit
 
+    _print "cmake -D BUILD_MODE=$PARAM_BUILD_MODE .."
     cmake -D BUILD_MODE="$PARAM_BUILD_MODE" ..
-    _print "cmake -D BUILD_MODE=${PARAM_BUILD_MODE} .."
 
-    make
     _print "make"
+    make
 
     if [[ -f "$ENV_BIN_DIR"/"$SERVER_NAME" ]]; then
         strip "$ENV_BIN_DIR"/"$SERVER_NAME"
