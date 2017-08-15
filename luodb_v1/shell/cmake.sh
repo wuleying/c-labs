@@ -16,6 +16,11 @@ ENV_BIN_DIR=""
 # 编译参数
 PARAM_BUILD_MODE="server"
 
+# 控制台输出
+_print() {
+    printf "[%-5s] %s\n" "${FUNCNAME[1]}" "$1"
+}
+
 # 初始化
 init(){
     # 编译参数
@@ -85,11 +90,6 @@ build() {
     fi
 
     _print "done..."
-}
-
-# 控制台输出
-_print() {
-    printf "[%-5s] %s\n" "${FUNCNAME[1]}" "$1"
 }
 
 main(){
