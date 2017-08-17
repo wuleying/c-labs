@@ -8,7 +8,7 @@
 // Created by luoliang1 on 2017/7/6.
 //
 
-#include <luodb/core/client.h>
+#include <luodb/client/client.h>
 
 static int
 _luoClientParseOptions(int argc, char **argv) {

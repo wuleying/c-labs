@@ -10,6 +10,7 @@
 
 #include <luodb/config/config.h>
 
+// yes/no转换为int型1/0/-1
 static int
 _yesOrNoToInt(char *str) {
     if (!strcasecmp(str, "yes")) {
@@ -42,34 +43,50 @@ initServerConfig() {
     luo_server.event_loop           = NULL;
 }
 
+// 加载服务端配置
 void
 loadServerConfig(char *file_name) {
+    // 配置文件操作句柄
     FILE    *fp      = fopen(file_name, "r");
+    // 配置项buff
     char    buf[LUO_CONFIG_LINE_MAX + 1];
+    // 配置项行号
     int     line_num = 0;
+    // 错误信息
     char    *err     = NULL;
+    // 当前行
     luo_str line     = NULL;
 
+    // 打开配置文件失败
     if (!fp) {
         luoLogWarn("Fatal error, can't open config file [%s].", file_name);
         exit(1);
     }
 
+    // 逐行处理配置项
     while (fgets(buf, LUO_CONFIG_LINE_MAX + 1, fp) != NULL) {
+        // 配置项参数
         luo_str *argv;
 
+        // 配置项数量
         int argc, i;
 
+        // 行号加1
         line_num++;
 
+        // 当前行分配buf大小内存
         line = luoStrNew(buf);
+        // 当前行去掉空格,制表符与换行符
         line = luoStrTrim(line, " \t\r\n");
 
+        // 当前行为注释或为空行
         if (line[0] == '#' || line[0] == '\0') {
+            // 释放内存并开始下一行处理
             luoStrFree(line);
             continue;
         }
 
+        //
         argv = luoStrSplitLen(line, (int) luoStrLen(line), " ", 1, &argc);
         luoStrToLower(argv[0]);
 

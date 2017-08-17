@@ -3,7 +3,7 @@ INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # 设置编译选项
-#SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
 
 option("BUILD_MODE" "Build mode" "server")
 
@@ -12,7 +12,7 @@ IF (BUILD_MODE STREQUAL "server")
     # 服务端源文件
     SET(LUODB_SERVER_SOURCE_SRC
             config/config.c
-            core/server.c
+            server/server.c
             event/event.c
             event/event_epoll.c
             event/event_kqueue.c
@@ -35,7 +35,7 @@ ELSEIF (BUILD_MODE STREQUAL "client")
     # 客户端源文件
     SET(LUODB_CLIENT_SOURCE_SRC
             config/config.c
-            core/client.c
+            client/client.c
             memory/mem.c
             net/tcp.c
             structure/dlist.c

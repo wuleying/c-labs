@@ -8,7 +8,7 @@
 // Created by luoliang1 on 2017/5/4.
 //
 
-#include <luodb/core/server.h>
+#include <luodb/server/server.h>
 
 static void
 _luoInitServer() {

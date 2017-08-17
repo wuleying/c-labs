@@ -22,9 +22,9 @@
 #include <luodb/structure/dlist.h>
 #include <luodb/structure/dict.h>
 #include <luodb/util/log.h>
-#include <luodb/core/server.h>
+#include <luodb/server/server.h>
 
-// 配置文件行最大字节
+// 配置文件行最大字节数
 #define LUO_CONFIG_LINE_MAX     1024
 
 /* 结构体定义 */
