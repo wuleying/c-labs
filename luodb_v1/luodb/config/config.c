@@ -86,8 +86,9 @@ loadServerConfig(char *file_name) {
             continue;
         }
 
-        //
+        // 按空格拆分配置项,并存入数组
         argv = luoStrSplitLen(line, (int) luoStrLen(line), " ", 1, &argc);
+        // 将配置项名称转小写
         luoStrToLower(argv[0]);
 
         // 守护进程
@@ -150,6 +151,7 @@ loadServerConfig(char *file_name) {
             }
         }
 
+        // 释放参数内存
         for (i = 0; i < argc; ++i) {
             luoStrFree(argv[i]);
         }
@@ -160,6 +162,7 @@ loadServerConfig(char *file_name) {
 
     return;
 
+    // 打印错误信息
     _displayError:
     {
         fprintf(stderr, "\n*** FATAL CONFIG FILE ERROR ***\n");
