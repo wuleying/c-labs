@@ -1,16 +1,18 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7)
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR})
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-
+# cmake最低版本
+cmake_minimum_required(VERSION 2.8.7)
+# 指定头文件的搜索路径
+include_directories(${PROJECT_SOURCE_DIR})
+# 设置可执行文件输出目路
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 设置编译选项
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
-
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
+# 编译参数 server|client
 option("BUILD_MODE" "Build mode" "server")
 
-IF (BUILD_MODE STREQUAL "server")
+if (BUILD_MODE STREQUAL "server")
 
     # 服务端源文件
-    SET(LUODB_SERVER_SOURCE_SRC
+    set(LUODB_SERVER_SOURCE_SRC
             config/config.c
             server/server.c
             event/event.c
@@ -28,12 +30,12 @@ IF (BUILD_MODE STREQUAL "server")
             util/file.c
             )
 
-    ADD_EXECUTABLE(${PROJECT_NAME}-server ${LUODB_SERVER_SOURCE_SRC})
+    add_executable(${PROJECT_NAME}-server ${LUODB_SERVER_SOURCE_SRC})
 
-ELSEIF (BUILD_MODE STREQUAL "client")
+elseif (BUILD_MODE STREQUAL "client")
 
     # 客户端源文件
-    SET(LUODB_CLIENT_SOURCE_SRC
+    set(LUODB_CLIENT_SOURCE_SRC
             config/config.c
             client/client.c
             memory/mem.c
@@ -44,6 +46,6 @@ ELSEIF (BUILD_MODE STREQUAL "client")
             util/file.c
             )
 
-    ADD_EXECUTABLE(${PROJECT_NAME}-client ${LUODB_CLIENT_SOURCE_SRC})
+    add_executable(${PROJECT_NAME}-client ${LUODB_CLIENT_SOURCE_SRC})
 
-ENDIF ()
+endif ()
