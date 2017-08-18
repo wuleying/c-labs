@@ -379,8 +379,7 @@ luoStrSplitLen(char *s, int len, char *sep, int sep_len, int *count) {
 
     return tokens;
 
-    _cleanup:
-    {
+    _cleanup: {
         int j;
 
         for (j = 0; j < elements; ++j) {

@@ -15,8 +15,13 @@ luodb
 
 cmake:
 
-    shell/cmake.sh
+    shell/cmake.sh [server|client]
 
 run:
 
     bin/luodb [/path/to/luodb.conf]
+
+build + test:
+
+    shell/dev-server.sh
+    shell/dev-client.sh
