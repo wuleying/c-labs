@@ -10,44 +10,59 @@
 
 #include <luodb/structure/str.h>
 
+// 生成一个指定值与长度的luo_str
 luo_str
 luoStrCreate(const void *init, long len) {
+    // 字符串
     struct luo_str_s *str;
 
+    // 分配内存空间
     str = luoMalloc(sizeof(struct luo_str_s) + len + 1);
 
+    // 分配内存失败,返回NULL
     if (str == NULL) {
         return NULL;
     }
 
+    // 设置字符串长度
     str->len = len;
 
+    // 设置字符串可用空间
     str->free = 0;
 
     if (len) {
         if (init) {
+            // 将init内容拷贝到字符串buffer中
             memcpy(str->buf, init, len);
         } else {
+            // 将buffer的前len个字节指定为0
             memset(str->buf, 0, len);
         }
     }
 
+    // buffer加上字符串结束符\0
     str->buf[len] = '\0';
 
+    // 返回buffer字符串指针
     return (char *) str->buf;
 }
 
+// 生成指定值的luo_str,无需指定长度
 luo_str
 luoStrNew(const char *init) {
+    // 获取字符串长度
     size_t len = (init == NULL) ? 0 : strlen(init);
+    // 返回字符串
     return luoStrCreate(init, len);
 }
 
+// 生成一个长度为0的空字符串
 luo_str
 luoStrEmpty() {
     return luoStrCreate("", 0);
 }
 
+// 返回一字luo_str字符串的长度
 int
 luoStrLen(const luo_str ls) {
     struct luo_str_s *lss = (void *) (ls - LUO_STR_LEN);

@@ -48,7 +48,7 @@ void
 loadServerConfig(char *file_name) {
     // 配置文件操作句柄
     FILE    *fp      = fopen(file_name, "r");
-    // 配置项buff
+    // 存放配置项的buffer
     char    buf[LUO_CONFIG_LINE_MAX + 1];
     // 配置项行号
     int     line_num = 0;
@@ -151,7 +151,7 @@ loadServerConfig(char *file_name) {
             }
         }
 
-        // 释放参数内存
+        // 释放内存
         for (i = 0; i < argc; ++i) {
             luoStrFree(argv[i]);
         }

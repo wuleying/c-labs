@@ -19,16 +19,25 @@
 
 #include <luodb/header/memory.h>
 
+/* 结构体 */
+// 声明luo_str为一种char类型
 typedef char *luo_str;
 
+// 字符串结构体
 struct luo_str_s {
+    // 字符串长度
     long len;
+    // 可用空间
     long free;
+    // 存放具体字符串的buffer
     char buf[];
 };
 
+/* 宏 */
+// 字符串长度
 #define LUO_STR_LEN sizeof(struct luo_str_s)
 
+/* 接口 */
 luo_str luoStrCreate(const void *init, long len);
 
 luo_str luoStrNew(const char *init);
