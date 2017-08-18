@@ -9,10 +9,24 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
 # 编译参数 server|client
 option("BUILD_MODE" "Build mode" "server")
 
-if (BUILD_MODE STREQUAL "server")
+if (${BUILD_MODE} STREQUAL "client")
+
+    # 客户端源文件
+    set(LUODB_SOURCE_SRC
+            config/config.c
+            client/client.c
+            memory/mem.c
+            net/tcp.c
+            structure/dlist.c
+            structure/str.c
+            util/log.c
+            util/file.c
+            )
+
+else ()
 
     # 服务端源文件
-    set(LUODB_SERVER_SOURCE_SRC
+    set(LUODB_SOURCE_SRC
             config/config.c
             server/server.c
             event/event.c
@@ -30,22 +44,6 @@ if (BUILD_MODE STREQUAL "server")
             util/file.c
             )
 
-    add_executable(${PROJECT_NAME}-server ${LUODB_SERVER_SOURCE_SRC})
-
-elseif (BUILD_MODE STREQUAL "client")
-
-    # 客户端源文件
-    set(LUODB_CLIENT_SOURCE_SRC
-            config/config.c
-            client/client.c
-            memory/mem.c
-            net/tcp.c
-            structure/dlist.c
-            structure/str.c
-            util/log.c
-            util/file.c
-            )
-
-    add_executable(${PROJECT_NAME}-client ${LUODB_CLIENT_SOURCE_SRC})
-
 endif ()
+
+add_executable(${PROJECT_NAME}-${BUILD_MODE} ${LUODB_SOURCE_SRC})
