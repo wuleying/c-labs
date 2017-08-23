@@ -11,9 +11,9 @@
 #ifndef LUODB_COMMON_CONSTANT_H
 #define LUODB_COMMON_CONSTANT_H
 
-// 默认IP
+// 服务端默认IP
 #define LUO_SERVER_TCP_IP           "127.0.0.1"
-// 默认TCP端口
+// 服务端默认TCP端口
 #define LUO_SERVER_TCP_PORT         20088
 
 // 全局状态
