@@ -23,14 +23,28 @@ _luoInitServer() {
 
     luo_server.event_loop = luoEventLoopCreate();
 
-    luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
+    luo_server.db = luoMalloc(sizeof(luo_db) * luo_server.db_num);
 
+    if (!luo_server.clients || !luo_server.slaves || !luo_server.monitors || !luo_server.event_loop || !luo_server.db) {
+        luoLogError("Server initialization");
+        luoOom("Server initialization");
+    }
+
+    luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
     luoLogInfo("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
 
     if (luo_server.fd == -1) {
         luoLogError("Opening TCP port, %s", luo_server.net_error);
         exit(1);
     }
+
+    // 创建数据库字典
+    for (int i = 0; i < luo_server.db_num; ++i) {
+        //luo_server.db[i].dict = luoDictCreate(NULL, NULL);
+        luo_server.db[i].id = i;
+    }
+
+    //luoEventTimeCreate(luo_server.event_loop, 1000, NULL, NULL, NULL);
 }
 
 static void
@@ -164,16 +178,19 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
     luo_server.stat_connections_num++;
 }
 
+// 主函数
 int main(int argc, char *argv[]) {
     // 初始化服务端配置
     initServerConfig();
 
     if (argc == 2) {
+        // 加载指定的配置文件
         loadServerConfig(argv[1]);
     } else if (argc > 2) {
         luoLogError("Usage: bin/luodb [/path/to/luodb.conf]");
         exit(1);
     } else {
+        // 使用默认配置项
         luoLogWarn("No config file specified, using the default config.");
     }
 

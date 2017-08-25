@@ -36,11 +36,13 @@ initServerConfig() {
     luo_server.slaves               = NULL;
     luo_server.monitors             = NULL;
     luo_server.repl_state           = 0;
-    luo_server.max_clients          = 0;
+    luo_server.max_clients          = 5;
     luo_server.stat_start_time      = time(NULL);
     luo_server.stat_commands_num    = 0;
     luo_server.stat_connections_num = 0;
     luo_server.event_loop           = NULL;
+    luo_server.db                   = NULL;
+    luo_server.db_num               = 8;
 }
 
 // 加载服务端配置
@@ -107,6 +109,16 @@ loadServerConfig(char *file_name) {
 
             if (luo_server.port < 1 || luo_server.port > 65535) {
                 err = "Invalid port";
+                goto _displayError;
+            }
+        }
+
+        // 数据库数量
+        if (!strcasecmp(argv[0], "db_num") && argc == 2) {
+            luo_server.db_num = (unsigned int) atoi(argv[1]);
+
+            if (luo_server.db_num < 1) {
+                err = "Invalid number of db_num";
                 goto _displayError;
             }
         }

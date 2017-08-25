@@ -22,24 +22,13 @@
 #include <luodb/structure/dlist.h>
 #include <luodb/structure/dict.h>
 #include <luodb/util/log.h>
-#include <luodb/server/server.h>
+#include <luodb/db/db.h>
+#include <luodb/object/object.h>
 
 // 配置文件行最大字节数
 #define LUO_CONFIG_LINE_MAX     1024
 
 /* 结构体定义 */
-typedef struct luo_object_s {
-    void *ptr;
-    int  type;
-    int  refcount;
-} luo_object;
-
-typedef struct luo_db_s {
-    luo_dict *dict;
-    luo_dict *expires;
-    int      id;
-} luo_db;
-
 typedef struct luo_client_s {
     int        fd;
     luo_db     *db;
@@ -85,6 +74,8 @@ struct luo_server_s {
     long long      stat_commands_num;           // 进程命令数量
     long long      stat_connections_num;        // 连接数量
     luo_event_loop *event_loop;                 // 事件循环
+    luo_db         *db;                         // 数据库
+    int            db_num;                      // 数据库数量
 };
 
 struct luo_server_s luo_server;

@@ -28,6 +28,7 @@ else ()
     # 服务端源文件
     set(LUODB_SOURCE_SRC
             config/config.c
+            db/db.c
             server/server.c
             event/event.c
             event/event_epoll.c
@@ -35,6 +36,7 @@ else ()
             event/event_select.c
             memory/mem.c
             net/tcp.c
+            object/object.c
             structure/dict.c
             structure/dlist.c
             structure/str.c
