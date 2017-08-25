@@ -17,6 +17,10 @@ _luoInitServer() {
     // 忽略SIGPIPE信号
     signal(SIGPIPE, SIG_IGN);
 
+    luo_server.clients  = luoDListCreate();
+    luo_server.slaves   = luoDListCreate();
+    luo_server.monitors = luoDListCreate();
+
     luo_server.event_loop = luoEventLoopCreate();
 
     luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
@@ -149,8 +153,6 @@ _luoAcceptHandler(luo_event_loop *event_loop, int fd, void *priv_data, int mask)
         close(client_fd);
         return;
     }
-
-    luoLogTrace("Client number = %d", LUO_DLIST_LENGTH(luo_server.clients));
 
     if (luo_server.max_clients && LUO_DLIST_LENGTH(luo_server.clients) > luo_server.max_clients) {
         char *err = "-ERR max number of clients reached\r\n";
