@@ -28,6 +28,9 @@
 // 配置文件行最大字节数
 #define LUO_CONFIG_LINE_MAX     1024
 
+// 数据库默认数量
+#define LUO_DEFAULT_DB_NUMBER   8
+
 /* 结构体定义 */
 typedef struct luo_client_s {
     int        fd;
@@ -70,6 +73,11 @@ struct luo_server_s {
     luo_dlist      *monitors;
     int            repl_state;
     unsigned int   max_clients;                 // 最大客户端数量
+    int            cron_loops;
+    int            bg_save_inprogress;
+    time_t         last_save;
+    long long      dirty;
+    size_t         used_memory;
     time_t         stat_start_time;             // 服务开始时间
     long long      stat_commands_num;           // 进程命令数量
     long long      stat_connections_num;        // 连接数量

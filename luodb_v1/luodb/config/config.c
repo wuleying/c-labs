@@ -37,12 +37,17 @@ initServerConfig() {
     luo_server.monitors             = NULL;
     luo_server.repl_state           = 0;
     luo_server.max_clients          = 5;
-    luo_server.stat_start_time      = time(NULL);
+    luo_server.cron_loops           = 0;
+    luo_server.bg_save_inprogress   = 0;
+    luo_server.last_save            = NULL;
+    luo_server.dirty                = 0;
+    luo_server.used_memory          = 0;
+    luo_server.stat_start_time      = NULL;
     luo_server.stat_commands_num    = 0;
     luo_server.stat_connections_num = 0;
     luo_server.event_loop           = NULL;
     luo_server.db                   = NULL;
-    luo_server.db_num               = 8;
+    luo_server.db_num               = LUO_DEFAULT_DB_NUMBER;
 }
 
 // 加载服务端配置

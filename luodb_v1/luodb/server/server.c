@@ -10,6 +10,66 @@
 
 #include <luodb/server/server.h>
 
+/* hash table type implementation */
+static int
+_luoStrDictKeyCompare(void *priv_data, const void *key1, const void *key2) {
+    int i, j;
+
+    LUO_NOT_USED(priv_data);
+
+    i = luoStrLen((luo_str) key1);
+    j = luoStrLen((luo_str) key2);
+
+    if (i != j) {
+        return 0;
+    }
+
+    return memcmp(key1, key2, (size_t) i) == 0;
+}
+
+static void
+_luoDictObjectDestructor(void *priv_data, void *object) {
+    LUO_NOT_USED(priv_data);
+
+    luoObjectDecrRefcount(object);
+}
+
+static int
+_luoDictStrKeyCompare(void *priv_data, const void *key1, const void *key2) {
+    const luo_object *obj1 = key1;
+    const luo_object *obj2 = key2;
+
+    return _luoStrDictKeyCompare(priv_data, obj1->ptr, obj2->ptr);
+}
+
+static unsigned int
+_luoDictStrHash(const void *key) {
+    const luo_object *obj = key;
+
+    return luoDictGenHashFunction(obj->ptr, luoStrLen((luo_str) obj->ptr));
+}
+
+static
+luo_dict_type luoSetDictType = {
+        _luoDictStrHash,            // 哈希函数
+        NULL,                       // key复制函数
+        NULL,                       // val复制函数
+        _luoDictStrKeyCompare,      // key比较函数
+        _luoDictObjectDestructor,   // key销毁函数
+        NULL                        // val销毁函数
+};
+
+static
+luo_dict_type luoHashDictType = {
+        _luoDictStrHash,            // 哈希函数
+        NULL,                       // key复制函数
+        NULL,                       // val复制函数
+        _luoDictStrKeyCompare,      // key比较函数
+        _luoDictObjectDestructor,   // key销毁函数
+        _luoDictObjectDestructor    // val销毁函数
+};
+
+/* private methods */
 static void
 _luoInitServer() {
     // 忽略SIGINT信号
@@ -40,11 +100,21 @@ _luoInitServer() {
 
     // 创建数据库字典
     for (int i = 0; i < luo_server.db_num; ++i) {
-        //luo_server.db[i].dict = luoDictCreate(NULL, NULL);
-        luo_server.db[i].id = i;
+        luo_server.db[i].dict    = luoDictCreate(&luoHashDictType, NULL);
+        luo_server.db[i].expires = luoDictCreate(&luoSetDictType, NULL);
+        luo_server.db[i].id      = i;
     }
 
-    //luoEventTimeCreate(luo_server.event_loop, 1000, NULL, NULL, NULL);
+    luo_server.cron_loops           = 0;
+    luo_server.bg_save_inprogress   = 0;
+    luo_server.last_save            = time(NULL);
+    luo_server.dirty                = 0;
+    luo_server.used_memory          = 0;
+    luo_server.stat_commands_num    = 0;
+    luo_server.stat_connections_num = 0;
+    luo_server.stat_start_time      = time(NULL);
+
+    luoEventTimeCreate(luo_server.event_loop, 1000, NULL, NULL, NULL);
 }
 
 static void

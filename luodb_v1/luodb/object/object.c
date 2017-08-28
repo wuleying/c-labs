@@ -3,3 +3,12 @@
 //
 
 #include <luodb/object/object.h>
+
+void
+luoObjectDecrRefcount(void *object) {
+    luo_object *obj = object;
+
+    if(--(obj->refcount) == 0) {
+        // todo free luodb object
+    }
+}

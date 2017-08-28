@@ -11,4 +11,6 @@ typedef struct luo_object_s {
     int  refcount;
 } luo_object;
 
+void luoObjectDecrRefcount(void *object);
+
 #endif //LUODB_OBJECT_H
