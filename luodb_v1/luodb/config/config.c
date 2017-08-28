@@ -46,6 +46,7 @@ initServerConfig() {
     luo_server.stat_commands_num    = 0;
     luo_server.stat_connections_num = 0;
     luo_server.event_loop           = NULL;
+    luo_server.max_idle_time        = LUO_CLIENT_MAX_IDLE_TIME;
     luo_server.db                   = NULL;
     luo_server.db_num               = LUO_DEFAULT_DB_NUMBER;
 }

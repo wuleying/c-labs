@@ -15,6 +15,10 @@
 #define LUO_SERVER_TCP_IP           "127.0.0.1"
 // 服务端默认TCP端口
 #define LUO_SERVER_TCP_PORT         20088
+// 客户端默认最大空闲时间
+#define LUO_CLIENT_MAX_IDLE_TIME    300
+// 数据库默认数量
+#define LUO_DEFAULT_DB_NUMBER       8
 
 // 全局状态
 #define LUO_OK                      0
@@ -37,5 +41,9 @@
 #define LUO_CLIENT_SLAVE            2
 #define LUO_CLIENT_MASTER           4
 #define LUO_CLIENT_MONITOR          8
+
+// 哈希表大小
+#define LUO_HASH_TABLE_MIN_SLOTS    16384
+#define LUO_HASH_TABLE_MIN_FILL     10
 
 #endif //LUODB_COMMON_CONSTANT_H

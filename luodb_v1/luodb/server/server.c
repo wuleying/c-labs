@@ -70,77 +70,6 @@ luo_dict_type luoHashDictType = {
 };
 
 /* private methods */
-static void
-_luoInitServer() {
-    // 忽略SIGINT信号
-    signal(SIGHUP, SIG_IGN);
-    // 忽略SIGPIPE信号
-    signal(SIGPIPE, SIG_IGN);
-
-    luo_server.clients  = luoDListCreate();
-    luo_server.slaves   = luoDListCreate();
-    luo_server.monitors = luoDListCreate();
-
-    luo_server.event_loop = luoEventLoopCreate();
-
-    luo_server.db = luoMalloc(sizeof(luo_db) * luo_server.db_num);
-
-    if (!luo_server.clients || !luo_server.slaves || !luo_server.monitors || !luo_server.event_loop || !luo_server.db) {
-        luoLogError("Server initialization");
-        luoOom("Server initialization");
-    }
-
-    luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
-    luoLogInfo("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
-
-    if (luo_server.fd == -1) {
-        luoLogError("Opening TCP port, %s", luo_server.net_error);
-        exit(1);
-    }
-
-    // 创建数据库字典
-    for (int i = 0; i < luo_server.db_num; ++i) {
-        luo_server.db[i].dict    = luoDictCreate(&luoHashDictType, NULL);
-        luo_server.db[i].expires = luoDictCreate(&luoSetDictType, NULL);
-        luo_server.db[i].id      = i;
-    }
-
-    luo_server.cron_loops           = 0;
-    luo_server.bg_save_inprogress   = 0;
-    luo_server.last_save            = time(NULL);
-    luo_server.dirty                = 0;
-    luo_server.used_memory          = 0;
-    luo_server.stat_commands_num    = 0;
-    luo_server.stat_connections_num = 0;
-    luo_server.stat_start_time      = time(NULL);
-
-    luoEventTimeCreate(luo_server.event_loop, 1000, NULL, NULL, NULL);
-}
-
-static void
-_luoDaemonize(void) {
-    int fd;
-
-    if (fork() != 0) {
-        exit(0);
-    }
-
-    // 创建一个新会话
-    setsid();
-
-    if ((fd = open("/dev/null", O_RDWR, 0)) != -1) {
-        dup2(fd, STDIN_FILENO);
-        dup2(fd, STDOUT_FILENO);
-        dup2(fd, STDERR_FILENO);
-
-        if (fd > STDERR_FILENO) {
-            close(fd);
-        }
-    }
-
-    luoFileSavePid(luo_server.pid_file_path, getpid());
-}
-
 static luo_client *
 _luoCreateClient(int fd) {
     luo_client *client = luoMalloc(sizeof(luo_client));
@@ -208,6 +137,143 @@ _luoFreeClient(luo_client *client) {
 
     luoFree(client->argv);
     luoFree(client);
+}
+
+static void
+_luoCloseTimeoutClients(void) {
+    luo_client     *client;
+    luo_dlist_node *dlist_node;
+    time_t         now = time(NULL);
+
+    luoDListRewind(luo_server.clients);
+
+    while ((dlist_node = luoDListYield(luo_server.clients)) != NULL) {
+        client = LUO_DLIST_NODE_VALUE(dlist_node);
+
+        if (!(client->flags & LUO_CLIENT_SLAVE) &&
+            !(client->flags & LUO_CLIENT_MASTER) &&
+            (now - client->last_interaction > luo_server.max_idle_time)) {
+
+            _luoFreeClient(client);
+        }
+    }
+}
+
+void
+_luoTryResizeHashTables(void) {
+    for (int i = 0; i < luo_server.db_num; ++i) {
+        long long size = (long long) LUO_DICT_GET_SIZE(luo_server.db[i].dict);
+        long long used = (long long) LUO_DICT_GET_USED(luo_server.db[i].dict);
+
+        if (size && used && size > LUO_HASH_TABLE_MIN_SLOTS
+            && (used * 100 / size < LUO_HASH_TABLE_MIN_FILL)) {
+            luoDictResize(luo_server.db[i].dict);
+            luoLogInfo("The hash table %d resized.", i);
+        }
+    }
+}
+
+static int
+_luoServerCron(struct luo_event_loop *event_loop, long long id, void *client_data) {
+    int i;
+    int loops = luo_server.cron_loops++;
+
+    LUO_NOT_USED(event_loop);
+    LUO_NOT_USED(id);
+    LUO_NOT_USED(client_data);
+
+    // 获取已使用内存
+    luo_server.used_memory = luoMallocUsedMemory();
+
+    /*
+    for (i = 0; i < luo_server.db_num; ++i) {
+        long long size = (long long) LUO_DICT_GET_SIZE(luo_server.db[i].dict);
+        long long used = (long long) LUO_DICT_GET_USED(luo_server.db[i].dict);
+        long long keys = (long long) LUO_DICT_GET_USED(luo_server.db[i].expires);
+    }
+    */
+
+    if (!luo_server.bg_save_inprogress) {
+        _luoTryResizeHashTables();
+    }
+
+    if (luo_server.max_idle_time && !(loops % 10)) {
+        // 关闭等待超时的客户端
+        _luoCloseTimeoutClients();
+    }
+
+    return 1000;
+}
+
+static void
+_luoInitServer() {
+    // 忽略SIGINT信号
+    signal(SIGHUP, SIG_IGN);
+    // 忽略SIGPIPE信号
+    signal(SIGPIPE, SIG_IGN);
+
+    luo_server.clients  = luoDListCreate();
+    luo_server.slaves   = luoDListCreate();
+    luo_server.monitors = luoDListCreate();
+
+    luo_server.event_loop = luoEventLoopCreate();
+
+    luo_server.db = luoMalloc(sizeof(luo_db) * luo_server.db_num);
+
+    if (!luo_server.clients || !luo_server.slaves || !luo_server.monitors || !luo_server.event_loop || !luo_server.db) {
+        luoLogError("Server initialization");
+        luoOom("Server initialization");
+    }
+
+    luo_server.fd = luoTcpServer(luo_server.net_error, luo_server.port, luo_server.bind_addr);
+    luoLogInfo("Opening TCP %s:%d", luo_server.bind_addr, luo_server.port);
+
+    if (luo_server.fd == -1) {
+        luoLogError("Opening TCP port, %s", luo_server.net_error);
+        exit(1);
+    }
+
+    // 创建数据库字典
+    for (int i = 0; i < luo_server.db_num; ++i) {
+        luo_server.db[i].dict    = luoDictCreate(&luoHashDictType, NULL);
+        luo_server.db[i].expires = luoDictCreate(&luoSetDictType, NULL);
+        luo_server.db[i].id      = i;
+    }
+
+    luo_server.cron_loops           = 0;
+    luo_server.bg_save_inprogress   = 0;
+    luo_server.last_save            = time(NULL);
+    luo_server.dirty                = 0;
+    luo_server.used_memory          = 0;
+    luo_server.stat_commands_num    = 0;
+    luo_server.stat_connections_num = 0;
+    luo_server.stat_start_time      = time(NULL);
+
+    luoEventTimeCreate(luo_server.event_loop, 1000, _luoServerCron, NULL, NULL);
+}
+
+static void
+_luoDaemonize(void) {
+    int fd;
+
+    if (fork() != 0) {
+        exit(0);
+    }
+
+    // 创建一个新会话
+    setsid();
+
+    if ((fd = open("/dev/null", O_RDWR, 0)) != -1) {
+        dup2(fd, STDIN_FILENO);
+        dup2(fd, STDOUT_FILENO);
+        dup2(fd, STDERR_FILENO);
+
+        if (fd > STDERR_FILENO) {
+            close(fd);
+        }
+    }
+
+    luoFileSavePid(luo_server.pid_file_path, getpid());
 }
 
 static void
