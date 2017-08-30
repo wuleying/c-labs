@@ -175,7 +175,6 @@ _luoTryResizeHashTables(void) {
 
 static int
 _luoServerCron(struct luo_event_loop *event_loop, long long id, void *client_data) {
-    int i;
     int loops = luo_server.cron_loops++;
 
     LUO_NOT_USED(event_loop);
@@ -184,14 +183,6 @@ _luoServerCron(struct luo_event_loop *event_loop, long long id, void *client_dat
 
     // 获取已使用内存
     luo_server.used_memory = luoMallocUsedMemory();
-
-    /*
-    for (i = 0; i < luo_server.db_num; ++i) {
-        long long size = (long long) LUO_DICT_GET_SIZE(luo_server.db[i].dict);
-        long long used = (long long) LUO_DICT_GET_USED(luo_server.db[i].dict);
-        long long keys = (long long) LUO_DICT_GET_USED(luo_server.db[i].expires);
-    }
-    */
 
     if (!luo_server.bg_save_inprogress) {
         _luoTryResizeHashTables();
