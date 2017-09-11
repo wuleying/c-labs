@@ -42,6 +42,9 @@
 #define LUO_CLIENT_MASTER           4
 #define LUO_CLIENT_MONITOR          8
 
+// 客户端配置
+#define LUO_MAX_CLIENTS_DEFAULT     5
+
 // 哈希表大小
 #define LUO_HASH_TABLE_MIN_SLOTS    16384
 #define LUO_HASH_TABLE_MIN_FILL     10
