@@ -96,8 +96,13 @@ loadServerConfig(char *file_name) {
 
         // 拆分配置项,并存入数组
         argv = luoStrSplitLen(line, (int) luoStrLen(line), "=", 1, &argc);
+
         // 将配置项名称转小写
         luoStrToLower(argv[0]);
+
+        // 去除参数前后空格
+        argv[0] = luoStrTrim(argv[0], " ");
+        argv[1] = luoStrTrim(argv[1], " ");
 
         // 守护进程
         if (!strcasecmp(argv[0], "daemonize") && argc == 2) {
