@@ -1,6 +1,8 @@
 luodb
 ====
 
+[![Build Status](https://travis-ci.org/wuleying/c-labs.svg?branch=master)](https://travis-ci.org/wuleying/c-labs)
+
 ```
  _                 _ _             _
 | |_   _  ___   __| | |__   __   _/ |
