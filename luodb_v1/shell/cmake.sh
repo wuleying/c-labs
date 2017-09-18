@@ -21,6 +21,12 @@ _print() {
     printf "[%-5s] %s\n" "${FUNCNAME[1]}" "$1"
 }
 
+# 错误信息
+_error() {
+    printf "[%-5s] Error: %s \n" "${FUNCNAME[1]}" "$1"
+    exit
+}
+
 # 初始化
 init(){
     # 编译参数
@@ -31,6 +37,10 @@ init(){
     ENV_ROOT_DIR=$(cd "$(dirname "$1")" || exit; pwd)
     ENV_BUILD_DIR="$ENV_ROOT_DIR"/build
     ENV_BIN_DIR="$ENV_ROOT_DIR"/bin
+
+    if [[ "$PARAM_BUILD_MODE" != "server" && "$PARAM_BUILD_MODE" != "client" ]]; then
+        _error "Build mode must be 'server' or 'client'."
+    fi
 
     _print "PARAM_BUILD_MODE:   $PARAM_BUILD_MODE"
     _print "ENV_ROOT_DIR:       $ENV_ROOT_DIR"
@@ -83,14 +93,18 @@ build() {
     _print "make"
     make
 
-    if [[ -f "$ENV_BIN_DIR"/"$SERVER_NAME" ]]; then
-        strip "$ENV_BIN_DIR"/"$SERVER_NAME"
-        chmod +x "$ENV_BIN_DIR"/"$SERVER_NAME"
+    if [[ "$PARAM_BUILD_MODE" == "server" ]]; then
+        if [[ -f "$ENV_BIN_DIR"/"$SERVER_NAME" ]]; then
+            strip "$ENV_BIN_DIR"/"$SERVER_NAME"
+            chmod +x "$ENV_BIN_DIR"/"$SERVER_NAME"
+        fi
     fi
 
-    if [[ -f "$ENV_BIN_DIR"/"$CLIENT_NAME" ]]; then
-        strip "$ENV_BIN_DIR"/"$CLIENT_NAME"
-        chmod +x "$ENV_BIN_DIR"/"$CLIENT_NAME"
+    if [[ "$PARAM_BUILD_MODE" == "client" ]]; then
+        if [[ -f "$ENV_BIN_DIR"/"$CLIENT_NAME" ]]; then
+            strip "$ENV_BIN_DIR"/"$CLIENT_NAME"
+            chmod +x "$ENV_BIN_DIR"/"$CLIENT_NAME"
+        fi
     fi
 
     _print "done..."
