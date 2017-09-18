@@ -17,7 +17,7 @@ ENV_BIN_DIR=""
 PARAM_BUILD_MODE="server"
 
 # 控制台输出
-_print() {
+_info() {
     printf "[%-5s] %s\n" "${FUNCNAME[1]}" "$1"
 }
 
@@ -42,55 +42,55 @@ init(){
         _error "Build mode must be 'server' or 'client'."
     fi
 
-    _print "PARAM_BUILD_MODE:   $PARAM_BUILD_MODE"
-    _print "ENV_ROOT_DIR:       $ENV_ROOT_DIR"
-    _print "ENV_BUILD_DIR:      $ENV_BUILD_DIR"
-    _print "ENV_BIN_DIR:        $ENV_BIN_DIR"
+    _info "PARAM_BUILD_MODE:   $PARAM_BUILD_MODE"
+    _info "ENV_ROOT_DIR:       $ENV_ROOT_DIR"
+    _info "ENV_BUILD_DIR:      $ENV_BUILD_DIR"
+    _info "ENV_BIN_DIR:        $ENV_BIN_DIR"
 }
 
 # 清理工作
 clean(){
-    _print "start..."
+    _info "start..."
 
     if [[ -d "$ENV_BUILD_DIR" ]]; then
-        _print "rm -rf $ENV_BUILD_DIR"
+        _info "rm -rf $ENV_BUILD_DIR"
         rm -rf "$ENV_BUILD_DIR"
     fi
 
     if [[ -f "$ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE" ]]; then
-        _print "rm $ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE"
+        _info "rm $ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE"
         rm "$ENV_BIN_DIR/$PROJECT_NAME-$PARAM_BUILD_MODE"
     fi
 
-    _print "end..."
+    _info "end..."
 }
 
 # 成生编译目录
 mdir(){
-    _print "start..."
+    _info "start..."
 
     if [[ ! -d "$ENV_BUILD_DIR" ]]; then
-        _print "mkdir $ENV_BUILD_DIR"
+        _info "mkdir $ENV_BUILD_DIR"
         mkdir "$ENV_BUILD_DIR"
     fi
 
     if [[ ! -d "$ENV_BIN_DIR" ]]; then
-        _print "mkdir $ENV_BIN_DIR"
+        _info "mkdir $ENV_BIN_DIR"
         mkdir "$ENV_BIN_DIR"
     fi
 
-    _print "end..."
+    _info "end..."
 }
 
 # 编译
 build() {
-    _print "cd $ENV_BUILD_DIR"
+    _info "cd $ENV_BUILD_DIR"
     cd "$ENV_BUILD_DIR" || exit
 
-    _print "cmake -D BUILD_MODE=$PARAM_BUILD_MODE .."
+    _info "cmake -D BUILD_MODE=$PARAM_BUILD_MODE .."
     cmake -D BUILD_MODE="$PARAM_BUILD_MODE" ..
 
-    _print "make"
+    _info "make"
     make
 
     if [[ "$PARAM_BUILD_MODE" == "server" ]]; then
@@ -107,7 +107,7 @@ build() {
         fi
     fi
 
-    _print "done..."
+    _info "done..."
 }
 
 main(){
