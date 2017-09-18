@@ -94,8 +94,8 @@ loadServerConfig(char *file_name) {
             continue;
         }
 
-        // 按空格拆分配置项,并存入数组
-        argv = luoStrSplitLen(line, (int) luoStrLen(line), " ", 1, &argc);
+        // 拆分配置项,并存入数组
+        argv = luoStrSplitLen(line, (int) luoStrLen(line), "=", 1, &argc);
         // 将配置项名称转小写
         luoStrToLower(argv[0]);
 

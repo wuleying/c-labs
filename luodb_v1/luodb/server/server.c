@@ -314,7 +314,7 @@ int main(int argc, char *argv[]) {
         // 加载指定的配置文件
         loadServerConfig(argv[1]);
     } else if (argc > 2) {
-        luoLogError("Usage: bin/luodb [/path/to/luodb.conf]");
+        luoLogError("Usage: bin/luodb [/path/to/luodb.ini]");
         exit(1);
     } else {
         // 使用默认配置项
