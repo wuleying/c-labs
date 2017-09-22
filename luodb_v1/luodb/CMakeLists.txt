@@ -4,8 +4,12 @@ cmake_minimum_required(VERSION 2.8.7)
 include_directories(${PROJECT_SOURCE_DIR})
 # 设置可执行文件输出目路
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+
 # 设置编译选项
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -w")
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_C_FLAGS_DEBUG "$ENV{CMAKE_C_FLAGS} -O0 -Wall -g -ggdb")
+set(CMAKE_C_FLAGS_RELEASE "$ENV{CMAKE_C_FLAGS} -O3 -Wall")
+
 # 编译参数 server|client
 option("BUILD_MODE" "Build mode" "server")
 
