@@ -39,10 +39,10 @@ initServerConfig() {
     luo_server.max_clients          = LUO_MAX_CLIENTS_DEFAULT;
     luo_server.cron_loops           = 0;
     luo_server.bg_save_inprogress   = 0;
-    luo_server.last_save            = NULL;
+    luo_server.last_save            = time(NULL);
     luo_server.dirty                = 0;
     luo_server.used_memory          = 0;
-    luo_server.stat_start_time      = NULL;
+    luo_server.stat_start_time      = time(NULL);
     luo_server.stat_commands_num    = 0;
     luo_server.stat_connections_num = 0;
     luo_server.event_loop           = NULL;

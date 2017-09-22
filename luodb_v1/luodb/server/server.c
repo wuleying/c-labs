@@ -174,7 +174,7 @@ _luoTryResizeHashTables(void) {
 }
 
 static int
-_luoServerCron(struct luo_event_loop *event_loop, long long id, void *client_data) {
+_luoServerCron(luo_event_loop *event_loop, long long id, void *client_data) {
     int loops = luo_server.cron_loops++;
 
     LUO_NOT_USED(event_loop);

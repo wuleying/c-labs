@@ -52,7 +52,7 @@ void luoStrFree(luo_str ls);
 
 long luoStrAvail(luo_str ls);
 
-static luo_str luoStrMakeRoomFor(luo_str ls, long add_len);
+luo_str luoStrMakeRoomFor(luo_str ls, long add_len);
 
 luo_str luoStrCatLen(luo_str ls, void *t, long len);
 

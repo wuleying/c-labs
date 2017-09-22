@@ -90,7 +90,7 @@ luoStrAvail(luo_str ls) {
     return lss->free;
 }
 
-static luo_str
+luo_str
 luoStrMakeRoomFor(luo_str ls, long add_len) {
     struct luo_str_s *lss, *new_lss;
 
