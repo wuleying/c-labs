@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-ps -ef | grep bin/luodb-client | grep -v 'grep'| awk '{printf $2}' | xargs kill -9
+pgrep -f "luodb-client" | xargs kill -9
+
+echo "luodb-client stopped."

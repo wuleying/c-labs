@@ -2,3 +2,5 @@
 
 #杀死原进程
 kill -9 "$(sed -n 1p ./luodb.pid)"
+
+echo "luodb-server stopped."
