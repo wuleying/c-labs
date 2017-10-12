@@ -48,7 +48,10 @@ void
 luoFileSavePid(char *pid_file_path, pid_t pid) {
     // 文件资源句柄
     FILE *fp = fopen(pid_file_path, "w");
-    if (fp) {
+
+    if (NULL == fp) {
+        luoLogWarn("Fopen pid file failed. pid=%d, pid_file_path=%s", pid, pid_file_path);
+    } else {
         // 写入pid
         fprintf(fp, "%d\n", pid);
         // 关闭文件句柄

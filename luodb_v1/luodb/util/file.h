@@ -16,6 +16,7 @@
 #include <memory.h>
 
 #include <luodb/structure/str.h>
+#include <luodb/util/log.h>
 
 // 目录权限0755
 #define LUO_FILE_RW     (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
