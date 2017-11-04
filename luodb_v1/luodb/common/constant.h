@@ -49,4 +49,13 @@
 #define LUO_HASH_TABLE_MIN_SLOTS    16384
 #define LUO_HASH_TABLE_MIN_FILL     10
 
+// 对象类型
+#define LUO_OBJECT_TYPE_STRING      0
+#define LUO_OBJECT_TYPE_LIST        1
+#define LUO_OBJECT_TYPE_SET         2
+#define LUO_OBJECT_TYPE_HASH        3
+
+// 已释放对象列表存储的对象最大数量
+#define LUO_OBJECT_FREE_LIST_MAX    1000000
+
 #endif //LUODB_COMMON_CONSTANT_H

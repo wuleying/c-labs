@@ -31,7 +31,7 @@ static void
 _luoDictObjectDestructor(void *priv_data, void *object) {
     LUO_NOT_USED(priv_data);
 
-    luoObjectDecrRefcount(object);
+    luoObjectDecrRefcount(object, luo_server.object_free_list);
 }
 
 static int

@@ -72,6 +72,7 @@ struct luo_server_s {
     unsigned int   max_clients;                 // 最大客户端数量
     int            cron_loops;
     int            bg_save_inprogress;
+    luo_dlist      *object_free_list;
     time_t         last_save;
     long long      dirty;
     size_t         used_memory;
